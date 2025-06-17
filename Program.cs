@@ -45,17 +45,17 @@ services.AddScoped<IConverter<Skill, AISkill>, ConvertToAISkill>();
 
 var app = builder.Build();
 
+#region For TalentFlow.Csharp.Core
+// Retrieve the configuration
+string? licenseKey = config["TalentFlowLicense:LicenseKey"];
+
+// Validate the key
+await LibraryConfiguration.InitializeAsync(licenseKey);
+#endregion
+
+#region For TalentFlow.Csharp.AI
 using (var scope = app.Services.CreateScope())
 {
-    #region For TalentFlow.Csharp.Core
-    // Retrieve the configuration
-    string? licenseKey = config["TalentFlowLicense:LicenseKey"];
-
-    // Validate the key
-    bool activated = await LibraryConfiguration.InitializeAsync(licenseKey);
-    #endregion
-
-    #region For TalentFlow.Csharp.AI
     var aiManager = scope.ServiceProvider.GetRequiredService<AIManager>();
 
     // Retrieve the configuration
@@ -64,8 +64,8 @@ using (var scope = app.Services.CreateScope())
 
     // Method call
     await aiManager.SetSemanticConfig(modelId, apiKey); 
-    #endregion
 }
+#endregion
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
