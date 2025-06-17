@@ -1,0 +1,46 @@
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using MudBlazor
+@using MudBlazor.Services
+@using TalentFlow.Demo
+@using TalentFlow.Demo.Components
+@using TalentFlow.Demo.Components.Shared
+@using TalentFlow.Demo.Helpers
+@using TalentFlow.Demo.Models
+@using TalentFlow.Demo.Resources
+@using TalentFlow.Demo.Services
+@using UglyToad.PdfPig
+@using UglyToad.PdfPig.Content
+
+@inject Snacks Snacks
+@inject CvService CvService
+
+@using TalentFlow.Csharp.Core.Services;
+@using TalentFlow.Csharp.Core.Helpers;
+@using TalentFlow.Csharp.Models.Objects;
+@using TalentFlow.Csharp.Models.Enums;
+@using TalentFlow.Csharp.AI
+@inject AIManager AIManager
+@inject TaskAttributionManager TaskAttributionManager
+@inject EmployeeManager EmployeeManager
+@inject StrategyVisionManager StrategyVisionManager
+
+@using TalentFlow.Demo.Converters
+@inject IConverter<TaskCompleted, TaskFinished> ConvertToTaskFinished
+@inject IConverter<TaskDoTo, TaskAttribution> ConvertToTaskAttribution
+@inject IConverter<TeamMember, Employee> ConvertToEmployee
+@inject IConverter<EmployeeUnavailability, EmployeeUnavailabilities> ConvertToEmployeeUnavailabilities
+@inject IConverter<UserSkill, EmployeeSkill> ConvertToEmployeeSkill
+@inject IConverter<TaskSetting, AttributionSetting> ConvertToAttributionSetting
+@inject IConverter<TaskAttributionSetting, TaskAttributionInput> ConvertToTaskAttributionInput
+@inject IConverter<AIStrategicSkill, StrategicSkill> ConvertToStrategicSkill
+@inject IConverter<TaskAttribution, TaskDoTo> ConvertToTaskDoTo
+@inject IConverter<EmployeeSkill, UserSkill> ConvertToUserSkill
+@inject IConverter<StrategicSkill, AIStrategicSkill> ConvertToAIStrategicSkill
+@inject IConverter<Skill, AISkill> ConvertToAISkill

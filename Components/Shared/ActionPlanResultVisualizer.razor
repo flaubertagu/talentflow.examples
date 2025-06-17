@@ -1,0 +1,377 @@
+﻿<IsBusy @ref="IsBusy" />
+
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+    <MudTabPanel Text="Dashboards">
+        @if (GlobalResult == null)
+        {
+            <MudText Align="Align.Center" Color="Color.Primary" Typo="Typo.h6">
+                Empty
+            </MudText>
+        }
+        else
+        {
+            <div class="d-flex flex-column flex-grow-0 flex-wrap gap-4">
+                <MudGrid Spacing="4">
+                    <MudItem xs="12" md="3">
+                        <MudPaper Class="d-flex flex-column align-center pa-4" Elevation="4">
+                            <MudText Align="Align.Center" Color="Color.Primary" Typo="Typo.h6">
+                                Ratio
+                            </MudText>
+
+                            <MudChart ChartType="ChartType.Donut" Width="200px" Height="200px"
+                                      InputData="@GlobalResult.DataUsed" InputLabels="@GlobalResult.LabelsUsed">
+                                <CustomGraphics>
+                                    <text class="donut-inner-text fill-white" x="50%" y="50%"
+                                          dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)"
+                                          font-family="Helvetica" font-size="20">
+                                        @GlobalResult.UsedRatio.ToString("P2")
+                                    </text>
+                                </CustomGraphics>
+                            </MudChart>
+
+                            <MudRating ReadOnly="true" SelectedValue="@GlobalResult.UsedRating" MaxValue="5" Size="Size.Small"
+                                       FullIcon="@Icons.Material.Filled.Star" EmptyIcon="@Icons.Material.Outlined.StarBorder"
+                                       FullIconColor="DashboardResult.GetColor(GlobalResult.UsedRatio)" EmptyIconColor="Color.Default" />
+
+                            <MudText Align="Align.Center" Typo="Typo.caption">
+                                @_notion1
+                            </MudText>
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudPaper Class="d-flex flex-column align-center pa-4" Elevation="4">
+                            <MudText Align="Align.Center" Color="Color.Primary" Typo="Typo.h6">
+                                Productivity
+                            </MudText>
+
+                            <MudChart ChartType="ChartType.Donut" Width="200px" Height="200px"
+                                      InputData="@GlobalResult.DataScore" InputLabels="@GlobalResult.LabelsScore">
+                                <CustomGraphics>
+                                    <text class="donut-inner-text fill-white" x="50%" y="50%"
+                                          dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)"
+                                          font-family="Helvetica" font-size="20">
+                                        @GlobalResult.Score.ToString("P2")
+                                    </text>
+                                </CustomGraphics>
+                            </MudChart>
+
+                            <MudRating ReadOnly="true" SelectedValue="@GlobalResult.ScoreRating" MaxValue="5" Size="Size.Small"
+                                       FullIcon="@Icons.Material.Filled.Star" EmptyIcon="@Icons.Material.Outlined.StarBorder"
+                                       FullIconColor="DashboardResult.GetColor(GlobalResult.Score)" EmptyIconColor="Color.Default" />
+
+                            <MudText Align="Align.Center" Typo="Typo.caption">
+                                @_notion2
+                            </MudText>
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudPaper Class="d-flex flex-column align-center pa-4" Elevation="4">
+                            <MudText Align="Align.Center" Color="Color.Primary" Typo="Typo.h6">
+                                Success ratio
+                            </MudText>
+
+                            <MudChart ChartType="ChartType.Donut" Width="200px" Height="200px"
+                                      InputData="@StrategicVisionHelper.GetData(GlobalResult.GlobalNote)"
+                                      InputLabels="@StrategicVisionHelper.GetLabels("Global")">
+                                <CustomGraphics>
+                                    <text class="donut-inner-text fill-white" x="50%" y="50%"
+                                          dominant-baseline="middle" text-anchor="middle" fill="var(--mud-palette-text-primary)"
+                                          font-family="Helvetica" font-size="20">
+                                        @GlobalResult.GlobalNote.ToString("P2")
+                                    </text>
+                                </CustomGraphics>
+                            </MudChart>
+
+                            <MudRating ReadOnly="true" SelectedValue="DashboardResult.GetGlobalRating(GlobalResult.GlobalNote)"
+                                       MaxValue="5" Size="Size.Small"
+                                       FullIcon="@Icons.Material.Filled.Star" EmptyIcon="@Icons.Material.Outlined.StarBorder"
+                                       FullIconColor="DashboardResult.GetColor(GlobalResult.Score)" EmptyIconColor="Color.Default" />
+
+                            <MudText Align="Align.Center" Typo="Typo.caption">
+                                @_notion3
+                            </MudText>
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudPaper Class="d-flex flex-column gap-2 pa-4" Elevation="4">
+                            @if (DisplayOptimalDate)
+                            {
+                                <MudText Class="text-white" Align="Align.Center" Typo="Typo.h6">
+                                    Optimal launching date
+                                </MudText>
+                                <MudText Class="text-white" Align="Align.Center" Color="Color.Primary" Typo="Typo.body2">
+                                    @OptimalDate.ToLongDateString()
+                                </MudText>
+                            }
+
+                            <MudText Align="Align.Center" Color="Color.Primary" Typo="Typo.h6">
+                                Recommandation
+                            </MudText>
+                            <MudText Class="text-white" Typo="Typo.body2">@_preRecommandation</MudText>
+                            <MudText Class="text-white" Typo="Typo.body2">- @RatioAdvice(GlobalResult.UsedRating)</MudText>
+                            <MudText Class="text-white" Typo="Typo.body2">- @ProductivityAdvice(GlobalResult.ScoreRating)</MudText>
+
+                            <MudGrid Justify="Justify.Center">
+                                <MudItem xs="12" md="6">
+                                    <div class="d-flex flex-column align-center gap-0">
+                                        <MudRating ReadOnly="true" MaxValue="5" Size="Size.Medium"
+                                                   SelectedValue="@DashboardResult.RecommandationRating(GlobalResult.UsedRating)"
+                                                   FullIcon="@Icons.Material.Filled.Star"
+                                                   EmptyIcon="@Icons.Material.Outlined.StarBorder"
+                                                   FullIconColor="DashboardResult.RecommandationColor(GlobalResult.UsedRating)"
+                                                   EmptyIconColor="Color.Default" />
+                                        <MudText Align="Align.Center" Typo="Typo.subtitle1">
+                                            Recruitment
+                                        </MudText>
+                                    </div>
+                                </MudItem>
+                                <MudItem xs="12" md="6">
+                                    <div class="d-flex flex-column align-center gap-0">
+                                        <MudRating ReadOnly="true" MaxValue="5" Size="Size.Medium"
+                                                   SelectedValue="@DashboardResult.RecommandationRating(GlobalResult.ScoreRating)"
+                                                   FullIcon="@Icons.Material.Filled.Star"
+                                                   EmptyIcon="@Icons.Material.Outlined.StarBorder"
+                                                   FullIconColor="DashboardResult.RecommandationColor(GlobalResult.ScoreRating)"
+                                                   EmptyIconColor="Color.Default" />
+                                        <MudText Align="Align.Center" Typo="Typo.subtitle1">
+                                            Training
+                                        </MudText>
+                                    </div>
+                                </MudItem>
+                            </MudGrid>
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudPaper Class="pa-4" Elevation="3">
+                            <MudStack Spacing="2">
+                                <div>
+                                    <MudButton OnClick="ShowStrategicSkillsTable">
+                                        @(_expandedStrategicSkills ? "Hide" : "Details")
+                                    </MudButton>
+                                </div>
+
+                                <MudDivider />
+
+                                <MudCollapse Expanded="_expandedStrategicSkills">
+                                    <MudTable Items="@SkillResults" Dense="true" Hover="true" Bordered="false"
+                                              Striped="false" T="StrategicSkillResult"
+                                              SortLabel="Filter By"
+                                              AllowUnsorted="true" LoadingProgressColor="Color.Info">
+                                        <HeaderContent>
+                                            <MudTh>
+                                                <MudTableSortLabel InitialDirection="SortDirection.Ascending"
+                                                                   SortBy="new Func<StrategicSkillResult, object>(x => x.SkillName!)">
+                                                    Name
+                                                </MudTableSortLabel>
+                                            </MudTh>
+                                            <MudTh>Team members</MudTh>
+                                            <MudTh>Ratio</MudTh>
+                                            <MudTh>Skill</MudTh>
+                                            <MudTh>Score</MudTh>
+                                            <MudTh>Productivity</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate>
+                                            <MudTd DataLabel="Name">@context.SkillName</MudTd>
+                                            <MudTd DataLabel="Team members">@context.NumberEmployees</MudTd>
+                                            <MudTd DataLabel="Ratio">@context.UsedRatio.ToString("P2")</MudTd>
+                                            <MudTd DataLabel="Skill">
+                                                <MudStack Spacing="1" style="align-content: center; justify-content: center">
+                                                    <MudRating ReadOnly="true" SelectedValue="context.UsedRating" MaxValue="5"
+                                                               FullIcon="@Icons.Material.Filled.Star"
+                                                               EmptyIcon="@Icons.Material.Outlined.StarBorder"
+                                                               FullIconColor="DashboardResult.GetColor(context.UsedRatio)"
+                                                               EmptyIconColor="Color.Tertiary" />
+                                                    <MudText Typo="Typo.caption">@context.UsedStatus</MudText>
+                                                </MudStack>
+                                            </MudTd>
+                                            <MudTd DataLabel="AppResources.Score">@context.Score.ToString("P2")</MudTd>
+                                            <MudTd DataLabel="AppResources.Productivity">
+                                                <MudStack Spacing="1" style="align-content: center; justify-content: center">
+                                                    <MudRating ReadOnly="true" SelectedValue="@context.ScoreRating" MaxValue="5"
+                                                               FullIcon="@Icons.Material.Filled.Star"
+                                                               EmptyIcon="@Icons.Material.Outlined.StarBorder"
+                                                               FullIconColor="DashboardResult.GetColor(context.Score)"
+                                                               EmptyIconColor="Color.Tertiary" />
+                                                    <MudText Typo="Typo.caption">@context.ScoreStatus</MudText>
+                                                </MudStack>
+                                            </MudTd>
+                                        </RowTemplate>
+                                        <PagerContent>
+                                            <MudTablePager PageSizeOptions="new int[] { 5, 10, 20, 50 }"
+                                                           RowsPerPageString="Rows per page:" />
+                                        </PagerContent>
+                                    </MudTable>
+                                </MudCollapse>
+                            </MudStack>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+
+            </div>
+        }
+    </MudTabPanel>
+
+    <MudTabPanel Text="Action plan" Disabled="@(ActionPlanSkills.Count == 0)">
+        <MudGrid>
+            <MudItem xs="12">
+                <MudPaper Class="pa-4" Elevation="4">
+                    <MudText Typo="Typo.h5" Color="Color.Error">
+                        Summary
+                    </MudText>
+
+                    <MudTable Items="@ActionPlanSkills" Dense="true" Hover="true" Bordered="false" Elevation="0"
+                              Striped="false" T="StrategicSkillNeed" SortLabel="Filter by"
+                              AllowUnsorted="true" LoadingProgressColor="Color.Info">
+                        <HeaderContent>
+                            <MudTh>
+                                <MudTableSortLabel InitialDirection="SortDirection.Ascending"
+                                                   SortBy="new Func<StrategicSkillNeed, object>(x => x.SkillName)">
+                                    Name
+                                </MudTableSortLabel>
+                            </MudTh>
+                            <MudTh>Complexity</MudTh>
+                            <MudTh>Current people</MudTh>
+                            <MudTh>Ideal people</MudTh>
+                            <MudTh>Priority</MudTh>
+                            <MudTh>Recommended aAction</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Skill">@context.SkillName</MudTd>
+                            <MudTd DataLabel="Complexity">@EnumsConverter.ComplexityToString(context.SkillComplexity)</MudTd>
+                            <MudTd DataLabel="Current people">@context.CurrentPeople</MudTd>
+                            <MudTd DataLabel="Ideal people">@context.IdealPeople</MudTd>
+                            <MudTd DataLabel="Priority">@context.Priority</MudTd>
+                            <MudTd DataLabel="Recommended_Action">@context.SuggestedAction</MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager PageSizeOptions="new int[] { 5, 10, 20, 50 }"
+                                                           RowsPerPageString="Rows per page:" />
+                        </PagerContent>
+                    </MudTable>
+                </MudPaper>
+            </MudItem>
+
+            @if (ActionPlanResult != null)
+            {
+                <MudItem xs="12">
+                    <MudPaper Class="pa-4" Elevation="4">
+                        @foreach (var line in CustomTextFormatter.ConvertToLines(ActionPlanResult.ActionPlan))
+                        {
+                            <MudText Typo="@line.Typography">
+                                @((MarkupString)line.Html)
+                            </MudText>
+                        }
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudGrid>
+                        <MudItem xs="12" md="4">
+                            <MudPaper Class="d-flex flex-column align-center pa-4" Elevation="4"
+                                      Outlined="@RecommandationOutlined(RecommendedStrategy.Recruitment)">
+                                <MudText Align="Align.Center" Typo="Typo.subtitle1">
+                                    Recruitment
+                                </MudText>
+
+                                <MudText Align="Align.Start" Typo="Typo.subtitle2">
+                                    Minimum
+                                    <MudText Align="Align.Start" Typo="Typo.subtitle2" Inline>
+                                        @ActionPlanResult.RecruitmentCostMin.ToString("C2")
+                                    </MudText>
+                                </MudText>
+
+                                <MudText Align="Align.Start" Typo="Typo.subtitle2">
+                                    Maximum
+                                    <MudText Align="Align.Start" Typo="Typo.subtitle2" Inline>
+                                        @ActionPlanResult.RecruitmentCostMax.ToString("C2")
+                                    </MudText>
+                                </MudText>
+                            </MudPaper>
+                        </MudItem>
+
+                        <MudItem xs="12" md="4">
+                            <MudPaper Class="d-flex flex-column align-center pa-4" Elevation="4"
+                                      Outlined="@RecommandationOutlined(RecommendedStrategy.Training)">
+                                <MudText Align="Align.Center" Typo="Typo.subtitle1">
+                                    Training
+                                </MudText>
+
+                                <MudText Align="Align.Start" Typo="Typo.subtitle2">
+                                    Minimum
+                                    <MudText Align="Align.Start" Typo="Typo.subtitle2" Inline>
+                                        @ActionPlanResult.TrainingCostMin.ToString("C2")
+                                    </MudText>
+                                </MudText>
+
+                                <MudText Align="Align.Start" Typo="Typo.subtitle2">
+                                    Maximum
+                                    <MudText Align="Align.Start" Typo="Typo.subtitle2" Inline>
+                                        @ActionPlanResult.TrainingCostMax.ToString("C2")
+                                    </MudText>
+                                </MudText>
+                            </MudPaper>
+                        </MudItem>
+
+                        <MudItem xs="12" md="4">
+                            <MudPaper Class="d-flex flex-column align-center pa-4" Elevation="4"
+                                      Outlined="@RecommandationOutlined(RecommendedStrategy.Mixed)">
+                                <MudText Align="Align.Center" Typo="Typo.subtitle1">
+                                    Both
+                                </MudText>
+
+                                <MudText Align="Align.Start" Typo="Typo.subtitle2">
+                                    Minimum
+                                    <MudText Align="Align.Start" Typo="Typo.subtitle2" Inline>
+                                        @ActionPlanResult.MixedCostMin.ToString("C2")
+                                    </MudText>
+                                </MudText>
+
+                                <MudText Align="Align.Start" Typo="Typo.subtitle2">
+                                    Maximum
+                                    <MudText Align="Align.Start" Typo="Typo.subtitle2" Inline>
+                                        @ActionPlanResult.MixedCostMax.ToString("C2")
+                                    </MudText>
+                                </MudText>
+                            </MudPaper>
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+
+                <MudItem xs="12">
+                    @if (Candidates.Count > 0)
+                    {
+                        <CandidatesDisplayComponent Strategies="@Candidates"
+                                                    MinimumScore="MinimumScore" />
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.subtitle1">
+                            No internal perfect match
+                        </MudText>
+                    }
+                </MudItem>
+            }
+
+            <MudItem xs="12">
+                <div class="d-flex flex-row flex-grow-0 flex-wrap gap-4">
+                    <MudButton FullWidth="false" Color="Color.Info" Variant="Variant.Filled">
+                        Export
+                    </MudButton>
+
+                    <MudButton FullWidth="false" Color="Color.Success" Variant="Variant.Filled" OnClick="RefreshStrategies"
+                               Disabled="@(ActionPlanResult == null)">
+                        Save
+                    </MudButton>
+                </div>
+            </MudItem>
+        </MudGrid>
+    </MudTabPanel>
+
+    <MudTabPanel Text="Strategy">
+        <MudText Class="text-white" Typo="Typo.body2">@StrategySelected?.Strategy</MudText>
+    </MudTabPanel>
+</MudTabs>

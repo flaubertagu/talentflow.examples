@@ -1,0 +1,313 @@
+﻿@page "/employee-metrics"
+
+<PageTitle>Employee metrics</PageTitle>
+
+<IsBusy @ref="IsBusy" />
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+
+    <div hidden="@false">
+        <CoreConfigChecker IsActivated="LicenseActivationStatus" />
+    </div>
+
+    <MudText Typo="Typo.h4" Class="mb-4">Team members</MudText>
+    <MudButton Class="mb-4" Color="Color.Warning" Disabled="_isProcessing" OnClick="GenerateData" Variant="Variant.Outlined">
+        @if (_isProcessing)
+        {
+            <span>Generating ...</span>
+        }
+        else
+        {
+            <span>Generate data</span>
+        }
+    </MudButton>
+
+    @if (_isProcessing)
+    {
+        <MudText Typo="Typo.h5" Align="Align.Center" Color="Color.Info">Calculating metrics...</MudText>
+        <MudProgressLinear Color="Color.Info" Class="mt-4" Style="height: 4px"
+                           Value="Progression" Max="TeamMembers.Count" />
+    }
+
+    <!-- Search bar -->
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudAutocomplete T="string"
+                         Label="Search member"
+                         @bind-Value="@_searchValue"
+                         SearchFunc="@SearchMembers"
+                         Placeholder="Type member name..."
+                         Variant="Variant.Outlined"
+                         AdornmentIcon="@Icons.Material.Filled.Search"
+                         Adornment="Adornment.Start"
+                         Clearable="true"
+                         OnClearButtonClick="@ClearSearch"
+                         Class="mb-2" />
+
+        @if (!string.IsNullOrEmpty(_searchValue))
+        {
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                @FilteredMembers.Count() result(s) find for "@_searchValue"
+            </MudText>
+        }
+    </MudPaper>
+
+    <!-- Navigation pagination -->
+    @if (FilteredMembers.Count() > ItemsPerPage)
+    {
+        <MudPaper Class="pa-2 mb-4 d-flex justify-center align-center" Elevation="1">
+            <MudButtonGroup Variant="Variant.Text">
+                <MudButton StartIcon="@Icons.Material.Filled.ChevronLeft"
+                           Disabled="@(_currentPage == 0)"
+                           OnClick="@PreviousPage">
+                    Previous
+                </MudButton>
+                <MudText Typo="Typo.body1" Class="mx-4 align-self-center">
+                    Page @(_currentPage + 1) sur @TotalPages
+                </MudText>
+
+                <MudButton EndIcon="@Icons.Material.Filled.ChevronRight"
+                           Disabled="@(_currentPage >= TotalPages - 1)"
+                           OnClick="@NextPage">
+                    Next
+                </MudButton>
+            </MudButtonGroup>
+        </MudPaper>
+    }
+
+    <!-- Grid view (3 per row, 3 rows max) -->
+    <MudGrid>
+        @foreach (var member in CurrentPageMembers)
+        {
+            var metrics = Metrics.FirstOrDefault(x => x.EmployeeName == member.Name);
+            <MudItem xs="12" sm="6" md="4">
+                <MudCard Class="mud-height-full">
+                    <MudCardHeader>
+                        <CardHeaderAvatar>
+                            <MudAvatar Color="Color.Primary">
+                                @member.Name.Substring(0, 1).ToUpper()
+                            </MudAvatar>
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">@member.Name</MudText>
+                            <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                                @member.UserSkills?.Count() Skills
+                            </MudText>
+
+                            @if (metrics != null)
+                            {
+                                <MudRating ReadOnly="true"
+                                           Size="Size.Small"
+                                           Color="@GetPerformanceColor(metrics.PerformanceScore)"
+                                           SelectedValue="@((int)Math.Round(metrics.PerformanceScore * 100 / 20))"
+                                           MaxValue="5" />
+                            }
+
+                        </CardHeaderContent>
+                    </MudCardHeader>
+
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Text"
+                                   Color="Color.Primary"
+                                   FullWidth
+                                   Disabled="@_popupVisible"
+                                   StartIcon="@Icons.Material.Filled.Psychology"
+                                   OnClick="() => ShowSkillsDialog(member)">
+                            Skills
+                        </MudButton>
+                        <MudButton Variant="Variant.Text"
+                                   Color="Color.Info"
+                                   FullWidth
+                                   Disabled="@_popupVisible"
+                                   StartIcon="@Icons.Material.Filled.Analytics"
+                                   OnClick="() => GetMetrics(member)">
+                            Metrics
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+
+    @if (!CurrentPageMembers.Any())
+    {
+        <MudPaper Class="pa-8 text-center" Elevation="0">
+            <MudIcon Icon="@Icons.Material.Filled.SearchOff" Size="Size.Large" Class="mud-text-secondary mb-2" />
+            <MudText Typo="Typo.h6" Class="mud-text-secondary">
+                @if (string.IsNullOrEmpty(_searchValue))
+                {
+                    <text>No team member found</text>
+                }
+                else
+                {
+                    <text>No result found for "@_searchValue"</text>
+                }
+            </MudText>
+        </MudPaper>
+    }
+</MudContainer>
+
+<MudDialog @bind-Visible="@_skillsDialogVisible" Options="@_dialogOptions">
+    <DialogContent>
+        <SkillListVisualizer Title="@($"Skills of {_selectedMember?.Name}")"
+                             EmployeeName="@_selectedMember?.Name"
+                             UserSkills="@_selectedMember?.UserSkills"
+                             OnClose="CloseSkillsDialog" />
+    </DialogContent>
+</MudDialog>
+
+<!-- Dialog to display metrics -->
+<MudDialog @bind-Visible="@_metricsDialogVisible" Options="@_dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Analytics" Class="mr-3" />
+            @_selectedEmployeeMetrics?.EmployeeName's metrics
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (_selectedEmployeeMetrics != null)
+        {
+            <MudGrid>
+                <!-- Delay ratio -->
+                <MudItem xs="12" md="6">
+                    <MudPaper Class="pa-4 mb-3" Elevation="2">
+                        <div class="d-flex align-center mb-2">
+                            <MudIcon Icon="@Icons.Material.Filled.TrendingDown" Color="Color.Primary" Class="mr-2" />
+                            <MudText Typo="Typo.h6">Delay ratio</MudText>
+                        </div>
+                        <MudText Typo="Typo.h4" Color="@GetDelayRatioColor(_selectedEmployeeMetrics.DelayRatio)" Class="font-weight-bold">
+                            @_selectedEmployeeMetrics.DelayRatio.ToString("P1")
+                        </MudText>
+                        <MudProgressLinear Color="@GetDelayRatioColor(_selectedEmployeeMetrics.DelayRatio)"
+                                           Value="@(_selectedEmployeeMetrics.DelayRatio * 100)"
+                                           Class="mt-2" />
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                            @GetDelayRatioLabel(_selectedEmployeeMetrics.DelayRatio)
+                        </MudText>
+                    </MudPaper>
+                </MudItem>
+
+                <!-- Multiple task occurrence penalty -->
+                <MudItem xs="12" md="6">
+                    <MudPaper Class="pa-4 mb-3" Elevation="2">
+                        <div class="d-flex align-center mb-2">
+                            <MudIcon Icon="@Icons.Material.Filled.RemoveCircle" Color="Color.Secondary" Class="mr-2" />
+                            <MudText Typo="Typo.h6">Multiple task occurrence penalty</MudText>
+                        </div>
+                        <MudText Typo="Typo.h4" Color="@GetMalusScoreColor(_selectedEmployeeMetrics.OccurenceMalus)" Class="font-weight-bold">
+                            @_selectedEmployeeMetrics.OccurenceMalus.ToString("P1")
+                        </MudText>
+                        <MudProgressLinear Color="@GetMalusScoreColor(_selectedEmployeeMetrics.OccurenceMalus)"
+                                           Value="@(_selectedEmployeeMetrics.OccurenceMalus * 100)"
+                                           Class="mt-2" />
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                            @GetMalusScoreLabel(_selectedEmployeeMetrics.SkillRetentionScore)
+                        </MudText>
+                    </MudPaper>
+                </MudItem>
+
+                <!-- Productivity Ratio -->
+                <MudItem xs="12" md="6">
+                    <MudPaper Class="pa-4 mb-3" Elevation="2">
+                        <div class="d-flex align-center mb-2">
+                            <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="Color.Primary" Class="mr-2" />
+                            <MudText Typo="Typo.h6">Productivity Ratio</MudText>
+                        </div>
+                        <MudText Typo="Typo.h4" Color="@GetProductivityColor(_selectedEmployeeMetrics.ProductivityRatio)" Class="font-weight-bold">
+                            @_selectedEmployeeMetrics.ProductivityRatio.ToString("P1")
+                        </MudText>
+                        <MudProgressLinear Color="@GetProductivityColor(_selectedEmployeeMetrics.ProductivityRatio)"
+                                           Value="@(_selectedEmployeeMetrics.ProductivityRatio * 100)"
+                                           Class="mt-2" />
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                            @GetProductivityLabel(_selectedEmployeeMetrics.ProductivityRatio)
+                        </MudText>
+                    </MudPaper>
+                </MudItem>
+
+                <!-- Skill Retention Score -->
+                <MudItem xs="12" md="6">
+                    <MudPaper Class="pa-4 mb-3" Elevation="2">
+                        <div class="d-flex align-center mb-2">
+                            <MudIcon Icon="@Icons.Material.Filled.Psychology" Color="Color.Primary" Class="mr-2" />
+                            <MudText Typo="Typo.h6">Skill Retention Score</MudText>
+                        </div>
+                        <MudText Typo="Typo.h4" Color="@GetRetentionScoreColor(_selectedEmployeeMetrics.SkillRetentionScore)" Class="font-weight-bold">
+                            @_selectedEmployeeMetrics.SkillRetentionScore.ToString("P1")
+                        </MudText>
+                        <MudProgressLinear Color="@GetRetentionScoreColor(_selectedEmployeeMetrics.SkillRetentionScore)"
+                                           Value="@(_selectedEmployeeMetrics.SkillRetentionScore * 100)"
+                                           Class="mt-2" />
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                            @GetRetentionScoreLabel(_selectedEmployeeMetrics.SkillRetentionScore)
+                        </MudText>
+                    </MudPaper>
+                </MudItem>
+
+                <!-- User Performance Score -->
+                <MudItem xs="12" md="6">
+                    <MudPaper Class="pa-4 mb-3" Elevation="2">
+                        <div class="d-flex align-center mb-2">
+                            <MudIcon Icon="@Icons.Material.Filled.MultilineChart" Color="Color.Success" Class="mr-2" />
+                            <MudText Typo="Typo.h6">User Performance Score</MudText>
+                        </div>
+                        <MudText Typo="Typo.h4" Color="@GetPerformanceColor(_selectedEmployeeMetrics.PerformanceScore)" Class="font-weight-bold mr-3">
+                            @_selectedEmployeeMetrics.PerformanceScore.ToString("P2")
+                        </MudText>
+                        <MudProgressLinear Color="@GetPerformanceColor(_selectedEmployeeMetrics.PerformanceScore)"
+                                           Value="@(_selectedEmployeeMetrics.PerformanceScore * 100)"
+                                           Size="Size.Medium"
+                                           Class="mt-2" />
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                            @GetPerformanceLabel(_selectedEmployeeMetrics.PerformanceScore)
+                        </MudText>
+                    </MudPaper>
+                </MudItem>
+
+                <!-- User Score -->
+                <MudItem xs="12" md="6">
+                    <MudPaper Class="pa-4 mb-3" Elevation="2">
+                        <div class="d-flex align-center mb-2">
+                            <MudIcon Icon="@Icons.Material.Filled.Star" Color="Color.Tertiary" Class="mr-2" />
+                            <MudText Typo="Typo.h6">User Score</MudText>
+                        </div>
+                        <MudText Typo="Typo.h4" Color="@GetPerformanceColor(_selectedEmployeeMetrics.PerformanceScore)" Class="font-weight-bold mr-3">
+                            @scoreOn5Stars(_selectedEmployeeMetrics.UserScore, _selectedEmployeeMetrics.MaxScore).ToString("F1")/5
+                        </MudText>
+                        <MudRating ReadOnly="true"
+                                   Size="Size.Small"
+                                   Color="@GetPerformanceColor(_selectedEmployeeMetrics.PerformanceScore)"
+                                   SelectedValue="@((int)Math.Round(_selectedEmployeeMetrics.PerformanceScore * 100 / 20))"
+                                   MaxValue="5" />
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary mt-1">
+                            @GetUserScoreLabel(_selectedEmployeeMetrics.PerformanceScore)
+                        </MudText>
+                    </MudPaper>
+                </MudItem>
+
+                <!-- Overall Assessment -->
+                <MudItem xs="12">
+                    <MudAlert Severity="@GetOverallSeverity(_selectedEmployeeMetrics)" Class="mt-2">
+                        <MudText Typo="Typo.body1" Class="font-weight-bold">
+                            Overall Assessment: @GetOverallAssessment(_selectedEmployeeMetrics)
+                        </MudText>
+                        <MudText Typo="Typo.body2">
+                            @GetOverallRecommendation(_selectedEmployeeMetrics)
+                        </MudText>
+                    </MudAlert>
+                </MudItem>
+            </MudGrid>
+        }
+        else
+        {
+            <MudAlert Severity="Severity.Warning">
+                Metrics not available for this employee.
+            </MudAlert>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="CloseMetricsDialog">Close</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FileDownload">
+            Export
+        </MudButton>
+    </DialogActions>
+</MudDialog>

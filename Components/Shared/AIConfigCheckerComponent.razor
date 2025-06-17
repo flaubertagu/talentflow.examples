@@ -1,0 +1,27 @@
+﻿
+<MudStack Class="mt-2 mb-2" Wrap="Wrap.NoWrap" Row="true" Spacing="0">
+    <MudChip T="string" Label="true" Color="Color.Default">TalentFlow AI status</MudChip>
+    <MudChip T="string" Label="true" Color="ConfigColor(SemanticIsConfigured)">@(ConfigurationStatus ?? "Waiting...")</MudChip>
+</MudStack>
+
+@code{
+    [Parameter] public EventCallback<bool> IsConfigured { get; set; }
+    private string ConfigurationStatus => SemanticIsConfigured ? "Configured" : "Not Configured";
+    public bool SemanticIsConfigured { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            SemanticIsConfigured = AIManager.IsSemanticConfigEnabled();
+            await InvokeAsync(StateHasChanged);
+            await IsConfigured.InvokeAsync(SemanticIsConfigured);
+        }
+    }
+
+    private Color ConfigColor(bool config)
+    {
+        if (config) return Color.Success;
+        return Color.Error;
+    }
+}

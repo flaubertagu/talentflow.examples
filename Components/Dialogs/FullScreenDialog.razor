@@ -1,0 +1,31 @@
+﻿<MudDialog Style="max-height:95%; max-width:95%">
+    <TitleContent>
+        <MudText Typo="Typo.h4">@Title</MudText>
+        <MudDivider />
+    </TitleContent>
+    <DialogContent>
+        @Content
+    </DialogContent>
+    <DialogActions>
+        <div class="d-flex flex-column flex-grow-1 gap-4">
+            <MudDivider />
+            <MudButton Color="Color.Error" OnClick="Close" Style="justify-content:right">@Action1</MudButton>
+        </div>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance? MudDialog { get; set; }
+
+    [Parameter]
+    public required string Title { get; set; }
+
+    [Parameter]
+    public string? Content { get; set; }
+
+    [Parameter]
+    public string? Action1 { get; set; }
+
+    private void Close() => MudDialog?.Cancel();
+}

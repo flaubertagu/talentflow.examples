@@ -1,0 +1,298 @@
+﻿@page "/task-attribution"
+
+<PageTitle>Automatic task attribution</PageTitle>
+
+<IsBusy @ref="IsBusy" />
+
+<div hidden="@false">
+    <CoreConfigChecker IsActivated="LicenseActivationStatus" />
+</div>
+
+<MudPaper Class="pa-4 mb-4">
+    <MudStack Spacing="2">
+        <div class="d-flex flex-row flex-grow-0 flex-wrap gap-4">
+            <MudButton Disabled="_isAutomting" Variant="Variant.Outlined"
+                       Color="Color.Warning" OnClick="RegenerateData">
+                Regenerate data
+            </MudButton>
+
+            <MudButton Disabled="_isAutomting" Variant="Variant.Outlined"
+                       Color="Color.Secondary" OnClick="OnShowTaskToDoClick">
+                @(_ShowTaskToDo ? "Hide To Do tasks" : "Show To Do tasks")
+            </MudButton>
+
+            <MudButton Disabled="_isAutomting" Variant="Variant.Outlined"
+                       Color="Color.Tertiary" OnClick="OnShowTaskSettingClick">
+                @(_ShowTaskSetting ? "Hide Settings" : "Show Settings")
+            </MudButton>
+
+            <MudButton Disabled="_isAutomting" Variant="Variant.Filled"
+                       Color="Color.Info" OnClick="LaunchTaskAttribution">
+                @if (_isAutomting)
+                {
+                    <span>Automation...</span>
+                }
+                else
+                {
+                    <span>Automatic attribution</span>
+                }
+            </MudButton>
+        </div>
+        <MudDivider />
+
+        <MudCollapse Expanded="_ShowTaskToDo">
+            <MudTable Items="TasksToDo" FixedHeader="true" Hover="true" Dense="true">
+                <HeaderContent>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<TaskDoTo, object>(x=>x.TaskName)">
+                            Title
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<TaskDoTo, object>(x=>x.StartDate)">
+                            Start date
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<TaskDoTo, object>(x=>x.EndDate)">
+                            End date
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>Skills</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Title"><MudText Class="flex-grow-1">@context.TaskName</MudText></MudTd>
+                    <MudTd DataLabel="Start date">@context.StartDate.ToShortDateString()</MudTd>
+                    <MudTd DataLabel="End date">@context.EndDate.ToShortDateString()</MudTd>
+                    <MudTd DataLabel="Skills">@string.Join(", ", context.UserSkills.GroupBy(x => x.Name).Select(x => x.Key).ToArray())</MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{10,20,50}"
+                                   RowsPerPageString="Rows per page: " />
+                </PagerContent>
+            </MudTable>
+        </MudCollapse>
+
+        <MudCollapse Expanded="_ShowTaskSetting">
+            <MudGrid Spacing="2">
+
+                <MudItem xs="12">
+                    <MudSelect @bind-Value="TaskSetting.TypeOfAttribution"
+                               Label="Adjust retraining" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@nameof(AttributionChoice.All)">
+                            @EnumsConverter.AttributionChoiceToString(AttributionChoice.All)
+                        </MudSelectItem>
+                        <MudSelectItem Value="@nameof(AttributionChoice.Best_performance)">
+                            @EnumsConverter.AttributionChoiceToString(AttributionChoice.Best_performance)
+                        </MudSelectItem>
+                        <MudSelectItem Value="@nameof(AttributionChoice.Best_relearning)">
+                            @EnumsConverter.AttributionChoiceToString(AttributionChoice.Best_relearning)
+                        </MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                @if (TaskSetting.TypeOfAttribution == nameof(AttributionChoice.All))
+                {
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.subtitle1">Recruitment required?</MudText>
+                        <MudToggleGroup T="bool" SelectionMode="SelectionMode.SingleSelection"
+                                        @bind-Value="TaskSetting.RecruitmentRequired"
+                                        Color="RecruitementColor(TaskSetting.RecruitmentRequired)"
+                                        CheckMark FixedContent>
+                            <MudToggleItem Value="@true" Text="Yes" />
+                            <MudToggleItem Value="@false" Text="No" />
+                        </MudToggleGroup>
+                    </MudItem>
+                }
+
+                <MudItem xs="12">
+                    <MudSelect @bind-Value="TaskSetting.LearningType"
+                               Label="Adjust retraining" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@nameof(LearningSet.Move_start_date_closer)">
+                            @EnumsConverter.LearningSetToString(LearningSet.Move_start_date_closer)
+                        </MudSelectItem>
+                        <MudSelectItem Value="@nameof(LearningSet.Move_end_date_later)">
+                            @EnumsConverter.LearningSetToString(LearningSet.Move_end_date_later)
+                        </MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudSlider T="int" @bind-Value="@TaskSetting.MaxOverBookTasks" Step="1" Min="2" Max="10" Variant="Variant.Filled">
+                        Overload Threshold : @TaskSetting.MaxOverBookTasks
+                    </MudSlider>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudSlider T="double" @bind-Value="@TaskSetting.MinProductivityBasic" Step="1" Min="50" Max="99.99" Variant="Variant.Filled">
+                        Minimum Productivity - Basic (%)" : @TaskSetting.MinProductivityBasic
+                    </MudSlider>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudSlider T="double" @bind-Value="@TaskSetting.MinProductivityModerate" Step="1" Min="50" Max="99.99" Variant="Variant.Filled">
+                        Minimum Productivity - Moderate (%)" : @TaskSetting.MinProductivityModerate
+                    </MudSlider>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudSlider T="double" @bind-Value="@TaskSetting.MinProductivityComplex" Step="1" Min="50" Max="99.99" Variant="Variant.Filled">
+                        Minimum Productivity - Complex (%) : @TaskSetting.MinProductivityComplex
+                    </MudSlider>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudSlider T="double" @bind-Value="@TaskSetting.RelearningPercentagePerDay" Step="1" Min="20" Max="100" Variant="Variant.Filled">
+                        Daily retraining percentage (%) : @TaskSetting.RelearningPercentagePerDay
+                    </MudSlider>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <MudSlider T="double" @bind-Value="@TaskSetting.DeepLearningThreshold" Step="1" Min="50" Max="99.99" Variant="Variant.Filled">
+                        Ratio threshold for deep learning (%) : @TaskSetting.DeepLearningThreshold
+                    </MudSlider>
+                </MudItem>
+            </MudGrid>
+        </MudCollapse>
+    </MudStack>
+</MudPaper>
+
+@if (TasksOptimized.Count > 0)
+{
+    <div class="d-flex flex-row flex-grow-0 flex-wrap gap-4 mb-4">
+        <CustomButtonSwitch ValueYes="@("Skills")"
+                            ValueNo="@("Hide")"
+                            DefaultValue="ShowSkillsActivated"
+                            Size="Size.Small"
+                            OnSelectionChanged="OnShowSkillSelection" />
+
+        <CustomButtonSwitch ValueYes="@("Dates")"
+                            ValueNo="@("Hide")"
+                            DefaultValue="ShowDatesActivated"
+                            Size="Size.Small"
+                            OnSelectionChanged="OnShowDateSelection" />
+    </div>
+
+    <MudPaper Class="pa-4">
+        @if (TaskSelected == null)
+        {
+            <MudTable T="TaskDoTo" Items="TasksOptimized" FixedHeader="true"
+                      Hover="true" Dense="true" Height="400px"
+                      OnRowClick="TaskOptimizedSelected">
+                <HeaderContent>
+                    <MudTh>Title</MudTh>
+                    <MudTh>Assigned to</MudTh>
+                    <MudTh>Score</MudTh>
+                    <MudTh>Selection</MudTh>
+                    @if (ShowSkillsActivated)
+                    {
+                        <MudTh>Complexity</MudTh>
+                        <MudTh>Skills</MudTh>
+                    }
+                    <MudTh>
+                        <MudTooltip Color="Color.Info" Placement="Placement.Bottom" Arrow="true"
+                                    Text="Overload ratio (%)">
+                            OVR
+                        </MudTooltip>
+                    </MudTh>
+                    <MudTh>
+                        <MudTooltip Color="Color.Info" Placement="Placement.Bottom" Arrow="true"
+                                    Text="Average retention rate increase">
+                            ARI
+                        </MudTooltip>
+                    </MudTh>
+                    @if (ShowDatesActivated)
+                    {
+                        <MudTh>Start date</MudTh>
+                        <MudTh>End date</MudTh>
+                        <MudTh>Duration</MudTh>
+                        <MudTh>Relearning start</MudTh>
+                        <MudTh>Relearning end</MudTh>
+                        <MudTh>Relearning duration</MudTh>
+                    }
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Title">
+                        <div class="d-flex flex-grow-1 gap-4">
+                            <MudText Class="flex-grow-1">@context.TaskName</MudText>
+                            @if (context.OverBooked == true)
+                            {
+                                <MudIcon Color="Color.Info" Icon="@Icons.Material.Filled.Warning" />
+                            }
+                        </div>
+                    </MudTd>
+                    <MudTd DataLabel="Assigned to">@context.AssignedTo</MudTd>
+                    <MudTd DataLabel="Score">
+                        @context.UserScore.ToString("F2") / @context.RequiredScore.ToString("F2")
+                    </MudTd>
+                    <MudTd DataLabel="Selection">
+                        <MudText Color="ScoringColor(context.Category)">
+                            @CandidateCategory(context.Category)
+                        </MudText>
+                    </MudTd>
+                    @if (ShowSkillsActivated)
+                    {
+                        <MudTd DataLabel="Complexity">@context.TaskComplexity</MudTd>
+                        <MudTd DataLabel="Skills" Style="white-space: pre-wrap;">
+                            @string.Join(", ", context.UserSkills.GroupBy(x => x.Name).Select(x => x.Key).ToArray())
+                        </MudTd>
+                    }
+                    <MudTd DataLabel="Overload ratio (%)">
+                        <MudText Class="flex-grow-1" Color="@ColorOverBook(context.OverBookRatio)">
+                            @context.OverBookRatio.ToString("P2")
+                        </MudText>
+                    </MudTd>
+                    <MudTd DataLabel="Overload ratio (%)">
+                        @context.AverageRRincrease.ToString("P2")
+                    </MudTd>
+                    @if (ShowDatesActivated)
+                    {
+                        <MudTd DataLabel="Start date">
+                            @context.StartDate.ToShortDateString()
+                        </MudTd>
+                        <MudTd DataLabel="End date">
+                            @context.EndDate.ToShortDateString()
+                        </MudTd>
+                        <MudTd DataLabel="Duration">
+                            @((context.EndDate - context.StartDate).Days)
+                        </MudTd>
+                        @if (context.RelearningStartDate != DateTime.MinValue)
+                        {
+                            <MudTd DataLabel="Relearning start">
+                                @context.RelearningStartDate.ToShortDateString()
+                            </MudTd>
+                        }
+                        else
+                        {
+                            <MudTd DataLabel="Relearning start">---</MudTd>
+                        }
+                        @if (context.RelearningEndDate != DateTime.MinValue)
+                        {
+                            <MudTd DataLabel="Relearning end">
+                                @context.RelearningEndDate.ToShortDateString()
+                            </MudTd>
+                        }
+                        else
+                        {
+                            <MudTd DataLabel="Relearning start">---</MudTd>
+                        }
+                        <MudTd DataLabel="Relearning duration">
+                            @context.RelearningDuration
+                        </MudTd>
+                    }
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[]{10,20,50}"
+                                   RowsPerPageString="Rows per page: " />
+                </PagerContent>
+            </MudTable>
+        }
+        else
+        {
+            <TaskOptimizedEditComponent TeamMembers="TeamMembers"
+                                        TaskSelected="TaskSelected"
+                                        OnSelectionCanceled="CancelTaskOptimizedSelection"
+                                        OnMemberChanged="ValidateMemberSelected" />
+        }
+    </MudPaper>
+}

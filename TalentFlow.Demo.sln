@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36203.30
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalentFlow.Demo", "TalentFlow.Demo.csproj", "{DE588DD9-DD45-E285-AE56-2964FBCCA47F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE588DD9-DD45-E285-AE56-2964FBCCA47F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE588DD9-DD45-E285-AE56-2964FBCCA47F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE588DD9-DD45-E285-AE56-2964FBCCA47F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE588DD9-DD45-E285-AE56-2964FBCCA47F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {03401C0B-50EE-4206-8519-EFBCF8BDB8AA}
+	EndGlobalSection
+EndGlobal

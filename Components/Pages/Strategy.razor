@@ -1,0 +1,271 @@
+﻿@page "/strategy"
+@inject NavigationManager Navigation
+
+<PageTitle>Strategy</PageTitle>
+
+<IsBusy @ref="IsBusy" />
+
+<div hidden="@false">
+    <AIConfigCheckerComponent IsConfigured="AiConfigResult" />
+</div>
+
+@if (StrategicSkills.Count == 0)
+{
+    <MudStack Spacing="4">
+        <CustomButtonSwitch ValueYes="@("Strategic vision")"
+                            ValueNo="@("Project")"
+                            DefaultValue="true"
+                            Size="Size.Small"
+                            ColorYes="Color.Primary"
+                            ColorNo="Color.Info"
+                            OnSelectionChanged="OnTypeChanged" />
+
+        <MudTextField @bind-Value="searchText" Variant="Variant.Outlined" Label="Activity area" Immediate="true"
+                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+
+        <MudChipSet T="string" @bind-SelectedValue="SelectedActivity" SelectionMode="SelectionMode.SingleSelection">
+            @foreach (var item in FilteredActivities)
+            {
+                @if (item == SelectedActivity)
+                {
+                    <MudChip T="string" @onclick="@(() => OnActivityClick(item))" Color="Color.Success" Variant="Variant.Text">
+                        <MudIcon Icon="@Icons.Material.Outlined.Check" Color="Color.Inherit" /> @item
+                    </MudChip>
+                }
+                else
+                {
+                    <MudChip T="string" @onclick="@(() => OnActivityClick(item))" Color="Color.Secondary" Variant="Variant.Text">
+                        @item
+                    </MudChip>
+                }
+            }
+        </MudChipSet>
+
+        <MudTextField @bind-Value="_title" Disabled="@(string.IsNullOrEmpty(SelectedActivity))" Variant="Variant.Outlined"
+                      Label="Title" MaxLength="100" Immediate />
+
+        <MudTextField @bind-Value="_strategy" Variant="Variant.Outlined"
+                      Disabled="@(string.IsNullOrEmpty(SelectedActivity))"
+                      Label="Describe your strategic vision"
+                      Lines="5" MaxLines="20" AutoGrow="true" Immediate />
+        <div>
+            <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary" OnClick="GetStrategicSkills"
+                       Disabled="GetStrategicSkillDisable">
+                @if (SemanticIsConfigured)
+                {
+                    @("Submit")
+                }
+                else
+                {
+                    @("AI configuration required")
+                }
+            </MudButton>
+        </div>
+    </MudStack>
+}
+else
+{
+    <MudStack Row="false" Spacing="2">
+        <MudCard>
+            <MudCardContent>
+                <MudText Typo="Typo.h6" Color="Color.Secondary">Summary</MudText>
+
+                <MudStack Wrap="Wrap.Wrap" Row="true" Spacing="2">
+                    <MudText Typo="Typo.subtitle1" Color="Color.Secondary">Activity area</MudText>
+                    <div>
+                        <MudChip Size="Size.Small" T="string" Color="Color.Success">
+                            <MudIcon Icon="@Icons.Material.Outlined.Check" Color="Color.Inherit" /> @SelectedActivity
+                        </MudChip>
+                    </div>
+                </MudStack>
+
+                <MudTextField T="string" Label="@_type" Placeholder="@_strategy"
+                              Variant="Variant.Outlined" ReadOnly="true" Lines="5" MaxLines="10" AutoGrow />
+            </MudCardContent>
+        </MudCard>
+
+        <MudCard>
+            <MudCardContent>
+                <MudStack Spacing="2">
+                    <MudText Typo="Typo.h6" Color="Color.Secondary">Result</MudText>
+
+                    <MudText Color="Color.Secondary">
+                        <MudText Inline Color="Color.Primary">
+                            @StrategicSkills.Count(x => string.IsNullOrEmpty(x.Equivalent)) / @StrategicSkills.Count
+                        </MudText>
+                        Missing skills
+                    </MudText>
+
+                    <div class="d-flex flex-row flex-grow-1 flex-wrap gap-4">
+                        <MudButton Color="Color.Warning" Variant="Variant.Outlined" OnClick="ShowSkillsTable">
+                            @(_expanded ? "Hide" : "Show skills")
+                        </MudButton>
+
+                        <MudButton Color="Color.Success" Variant="Variant.Filled" Disabled="@Completed"
+                                   OnClick="SaveResult">
+                            Save
+                        </MudButton>
+
+                        <MudButton Color="Color.Warning" Variant="Variant.Filled" Disabled="@(!Completed)"
+                                   OnClick="ResetAll">
+                            Reset
+                        </MudButton>
+
+                        <MudButton Color="Color.Success" Variant="Variant.Filled" Disabled="@(!Completed)"
+                                   OnClick="@(() => Navigation.NavigateTo(Navigation.BaseUri + "action-plan"))">
+                            Action plan
+                        </MudButton>
+                    </div>
+
+                    <MudDivider />
+
+                    <MudCollapse Expanded="_expanded">
+                        @if (SkillSelected == null)
+                        {
+                            <MudTable Items="@StrategicSkills" Dense="true" Hover="true" Bordered="false" Striped="false"
+                                      T="StrategicSkill" OnRowClick="OnSkillSelected"
+                                      SortLabel="Filter by" AllowUnsorted="true"
+                                      LoadingProgressColor="Color.Info">
+                                <ColGroup>
+                                    <col style="width: 60px;" />
+                                    <col />
+                                    <col />
+                                    <col />
+                                </ColGroup>
+                                <HeaderContent>
+                                    <MudTh>
+                                        <MudTableSortLabel SortBy="new Func<StrategicSkill, object>(x => x.Equivalent)">
+                                        </MudTableSortLabel>
+                                    </MudTh>
+                                    <MudTh>
+                                        <MudTableSortLabel InitialDirection="SortDirection.Ascending"
+                                                           SortBy="new Func<StrategicSkill, object>(x => x.NameAI)">
+                                            Name
+                                        </MudTableSortLabel>
+                                    </MudTh>
+                                    <MudTh>
+                                        <MudTableSortLabel SortBy="new Func<StrategicSkill, object>(x => x.Equivalent)">
+                                            Equivalent
+                                        </MudTableSortLabel>
+                                    </MudTh>
+                                    <MudTh>
+                                        <MudTableSortLabel SortBy="new Func<StrategicSkill, object>(x => x.Complexity)">
+                                            Complexity
+                                        </MudTableSortLabel>
+                                    </MudTh>
+                                    <MudTh>Skills</MudTh>
+                                </HeaderContent>
+                                <RowTemplate>
+                                    <MudTd>
+                                        @if (!string.IsNullOrEmpty(context.Equivalent))
+                                        {
+                                            <MudIcon Color="Color.Success" Icon="@Icons.Material.Filled.CheckCircle" />
+                                        }
+                                        else
+                                        {
+                                            <MudIcon Color="Color.Error" Icon="@Icons.Material.Filled.Remove" />
+                                        }
+                                    </MudTd>
+                                    <MudTd DataLabel="Name">@context.NameAI</MudTd>
+                                    <MudTd DataLabel="Equivalent">@context.Equivalent</MudTd>
+                                    <MudTd DataLabel="Complexity">@context.Complexity</MudTd>
+                                    <MudTd DataLabel="Skills">
+                                        @string.Join(", ", context.ComplementarySkills.ToArray())
+                                    </MudTd>
+                                </RowTemplate>
+                                <PagerContent>
+                                    <MudTablePager PageSizeOptions="new int[]{10,20,50}"
+                                                   RowsPerPageString="Rows per page:" />
+                                </PagerContent>
+                            </MudTable>
+                        }
+                        else
+                        {
+                            <MudStack Row="false" Spacing="4">
+
+                                <MudText Typo="Typo.h6" Color="Color.Secondary">
+                                    Skill -
+                                    <MudText Typo="Typo.h6" Color="Color.Primary" Inline>
+                                        @SkillSelected.NameAI
+                                    </MudText>
+                                </MudText>
+
+                                <MudText Typo="Typo.h6" Color="Color.Secondary">
+                                    Complexity -
+                                    <MudText Typo="Typo.h6" Color="Color.Primary" Inline>
+                                        @SkillSelected.Complexity
+                                    </MudText>
+                                </MudText>
+
+                                <MudTable Items="@Skills" Dense="false" Hover="true" Bordered="false" Striped="false"
+                                          Filter="new Func<Skill,bool>(FilterFunc1)" T="Skill" OnRowClick="OnCurrentSkillSelected"
+                                          SortLabel="Filter by" AllowUnsorted="true"
+                                          LoadingProgressColor="Color.Info">
+                                    <ToolBarContent>
+                                        <MudSpacer />
+                                        <MudTextField @bind-Value="searchItem"
+                                                      Immediate="true"
+                                                      Placeholder="Search"
+                                                      Adornment="Adornment.Start"
+                                                      AdornmentIcon="@Icons.Material.Filled.Search"
+                                                      IconSize="Size.Medium" Class="mt-0">
+                                        </MudTextField>
+                                    </ToolBarContent>
+                                    <HeaderContent>
+                                        <MudTh>
+                                            <MudTableSortLabel InitialDirection="SortDirection.Ascending"
+                                                               SortBy="new Func<Skill, object>(x => x.Name)">
+                                                Name
+                                            </MudTableSortLabel>
+                                        </MudTh>
+                                        <MudTh>
+                                            <MudTableSortLabel SortBy="new Func<Skill, object>(x => x.Complexity)">
+                                                Complexity
+                                            </MudTableSortLabel>
+                                        </MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd DataLabel="Name">@context.Name</MudTd>
+                                        <MudTd DataLabel="Name">@context.Complexity</MudTd>
+                                    </RowTemplate>
+                                    <PagerContent>
+                                        <MudTablePager PageSizeOptions="new int[]{10,20,50}"
+                                                       RowsPerPageString="Rows per page:" />
+                                    </PagerContent>
+                                </MudTable>
+
+                                <MudText Typo="Typo.h6" Color="Color.Secondary">
+                                    Skill -
+                                    @if (CurrentSkillSelected == null)
+                                    {
+                                        <MudText Typo="Typo.h6" Color="Color.Primary" Inline>
+                                            Empty
+                                        </MudText>
+                                    }
+                                    else
+                                    {
+                                        <MudText Typo="Typo.h6" Color="Color.Primary" Inline>
+                                            @CurrentSkillSelected.Name
+                                        </MudText>
+                                    }
+                                </MudText>
+
+                                <MudStack Wrap="Wrap.Wrap" Row="true" Spacing="4">
+                                    <MudButton Color="Color.Error" OnClick="ResetSkillSelection">
+                                        Cancel
+                                    </MudButton>
+
+                                    <MudButton Color="Color.Success" Disabled="UpdateEquivalentDisable"
+                                               OnClick="ConfirmCurrentSkillSelection">
+                                        Confirm
+                                    </MudButton>
+                                </MudStack>
+                            </MudStack>
+                        }
+                    </MudCollapse>
+                </MudStack>
+            </MudCardContent>
+
+        </MudCard>
+    </MudStack>
+}

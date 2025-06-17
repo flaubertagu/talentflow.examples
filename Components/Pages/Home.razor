@@ -1,0 +1,19 @@
+﻿@page "/"
+@inject IConfiguration Config
+@using TalentFlow.Csharp.Core.Licensing
+
+<PageTitle>Home</PageTitle>
+
+<div hidden="@false">
+    <CoreConfigChecker IsActivated="LicenseActivationStatus" />
+</div>
+
+@code{
+    /// <summary>
+    /// Allows you to retrieve the activation status of license in TalentFlow.Csharp.Core 
+    /// </summary>
+    #region TalentFlow.Csharp.AI status configuration
+    private bool IsActivated { get; set; }
+    public void LicenseActivationStatus(bool config) => IsActivated = config;
+    #endregion
+}

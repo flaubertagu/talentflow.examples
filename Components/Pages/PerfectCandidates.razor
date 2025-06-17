@@ -1,0 +1,250 @@
+﻿@page "/candidat-selection"
+
+<PageTitle>Candidate selection</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <div hidden="@false">
+        <CoreConfigChecker IsActivated="LicenseActivationStatus" />
+    </div>
+
+    <MudText Typo="Typo.h4" Class="mb-6" Color="Color.Primary">
+        <MudIcon Icon="@Icons.Material.Filled.Psychology" Class="mr-2" />
+        Skills Assessment System
+    </MudText>
+
+    @if (!hasEvaluated)
+    {
+        <MudCard Elevation="3" Class="pa-4">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6" Color="Color.Primary">
+                        <MudIcon Icon="@Icons.Material.Filled.Checklist" Class="mr-2" />
+                        Selection of Required Skills
+                    </MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.subtitle1">
+                    Top candidates:
+                    <MudText Inline="true" Typo="Typo.h6" Color="GetColorTopSelection(Top)">
+                        @Top.ToString()
+                    </MudText>
+                    <MudSlider T="int" @bind-Value="Top" TickMarks="true" Min="3" Max="10" Step="1"
+                               Variant="Variant.Filled" Size="Size.Medium"
+                               Immediate="true" Color="GetColorTopSelection(Top)">
+                    </MudSlider>
+                </MudText>
+
+                <!-- Search filter -->
+                <MudTextField @bind-Value="searchText"
+                              Label="Search technical skill"
+                              Variant="Variant.Outlined"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="Icons.Material.Filled.Search"
+                              Class="mb-4"
+                              OnKeyUp="FilterSkills" />
+
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <!-- List of available skills -->
+                        <MudText Typo="Typo.subtitle2" Class="mb-2">Available Skills</MudText>
+                        <MudCard Variant="Variant.Outlined" Class="mb-4" Style="max-height: 300px; overflow-y: auto;">
+                            <MudList T="UserSkill" Clickable="true" Dense="true">
+                                @foreach (var skill in FilteredAvailableSkills)
+                                {
+                                    <MudListItem OnClick="() => SelectSkill(skill)"
+                                                 Class="hover-highlight">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                            <div>
+                                                <MudText Typo="Typo.body2"><strong>@skill.Name</strong></MudText>
+                                                <MudText Typo="Typo.caption" Color="Color.Secondary">Complexity: @skill.Complexity</MudText>
+                                            </div>
+                                            <MudIconButton Icon="@Icons.Material.Filled.Add"
+                                                           Color="Color.Primary"
+                                                           Size="Size.Small"
+                                                           OnClick="() => SelectSkill(skill)" />
+                                        </div>
+                                    </MudListItem>
+                                    <MudDivider />
+                                }
+                            </MudList>
+                        </MudCard>
+                    </MudItem>
+
+                    <MudItem xs="12" md="6">
+                        <!-- Skills selected -->
+                        <MudText Typo="Typo.subtitle2" Class="mb-2">
+                            Skills selected (@SelectedSkills.Count)
+                        </MudText>
+                        <MudCard Variant="Variant.Outlined" Style="min-height: 150px; max-height: 300px; overflow-y: auto;">
+                            @if (SelectedSkills.Any())
+                            {
+                                <MudList T="UserSkill" Dense="true">
+                                    @foreach (var skill in SelectedSkills)
+                                    {
+                                        <MudListItem>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                                <div>
+                                                    <MudText Typo="Typo.body2"><strong>@skill.Name</strong></MudText>
+                                                    <MudText Typo="Typo.caption" Color="Color.Secondary">@skill.Complexity</MudText>
+                                                </div>
+                                                <MudIconButton Icon="@Icons.Material.Filled.Remove"
+                                                               Color="Color.Error"
+                                                               Size="Size.Small"
+                                                               OnClick="() => RemoveSkill(skill)" />
+                                            </div>
+                                        </MudListItem>
+                                        <MudDivider />
+                                    }
+                                </MudList>
+                            }
+                            else
+                            {
+                                <MudAlert Severity="Severity.Info" Class="ma-2">
+                                    No skills selected. Add skills to define the ideal profile.
+                                </MudAlert>
+                            }
+                        </MudCard>
+
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+            <MudCardActions>
+                <div class="d-flex flex-row flex-grow-0 gap-4">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Warning"
+                               StartIcon="@Icons.Material.Filled.Dataset"
+                               OnClick="RandomizeData">
+                        @if (isRandomizing)
+                        {
+                            <MudProgressCircular Class="mr-2" Size="Size.Small" Indeterminate="true" />
+                            <span>Randomizing...</span>
+                        }
+                        else
+                        {
+                            <span>Randomize</span>
+                        }
+                    </MudButton>
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Error"
+                               StartIcon="@Icons.Material.Filled.Clear"
+                               OnClick="ClearSelection"
+                               Disabled="!SelectedSkills.Any() || isClearing">
+                        @if (isClearing)
+                        {
+                            <MudProgressCircular Class="mr-2" Size="Size.Small" Indeterminate="true" />
+                            <span>Clearing...</span>
+                        }
+                        else
+                        {
+                            <span>Clear</span>
+                        }
+                    </MudButton>
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Assessment"
+                               OnClick="EvaluateCandidates"
+                               Disabled="!SelectedSkills.Any() || isEvaluating">
+                        @if (isEvaluating)
+                        {
+                            <MudProgressCircular Class="mr-2" Size="Size.Small" Indeterminate="true" />
+                            <span>Assessment...</span>
+                        }
+                        else
+                        {
+                            <span>Evaluate Candidates</span>
+                        }
+                    </MudButton>
+
+                </div>
+            </MudCardActions>
+        </MudCard>
+    }
+    else
+    {
+        <MudCard Elevation="3" Class="pa-4">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6" Color="Color.Primary">
+                        <MudIcon Icon="@Icons.Material.Filled.Leaderboard" Class="mr-2" />
+                        Assessment results
+                    </MudText>
+                    <MudText Typo="Typo.subtitle1">
+                        Top candidates:
+                        <MudText Inline="true" Typo="Typo.h6" Color="GetColorTopSelection(Top)">
+                            @Top.ToString()
+                        </MudText>
+                        <MudSlider T="int" @bind-Value="Top" TickMarks="true" Min="3" Max="10" Step="1"
+                                   Variant="Variant.Filled" Size="Size.Medium"
+                                   Immediate="true" Color="GetColorTopSelection(Top)">
+                        </MudSlider>
+                    </MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                @if (EvaluationResults.Any())
+                {
+                    <CandidatSkillsMatchedVisualizer Results="EvaluationResults" />
+                }
+                else if (hasEvaluated)
+                {
+                    <MudAlert Severity="Severity.Warning">
+                        No results found. Check your selection criteria.
+                    </MudAlert>
+                }
+                else
+                {
+                    <MudAlert Severity="Severity.Info">
+                        Select skills and click "Evaluate Candidates" to see the results.
+                    </MudAlert>
+                }
+            </MudCardContent>
+            @if (EvaluationResults.Any())
+            {
+                <MudCardActions>
+                    <div class="d-flex flex-row flex-grow-0 gap-4">
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Error"
+                                   StartIcon="@Icons.Material.Filled.Clear"
+                                   OnClick="ClearSelection"
+                                   Disabled="!SelectedSkills.Any() || isClearing">
+                            @if (isClearing)
+                            {
+                                <MudProgressCircular Class="mr-2" Size="Size.Small" Indeterminate="true" />
+                                <span>Clearing...</span>
+                            }
+                            else
+                            {
+                                <span>Clear</span>
+                            }
+                        </MudButton>
+
+                        <MudButton Variant="Variant.Outlined"
+                                   Color="Color.Info"
+                                   StartIcon="@Icons.Material.Filled.Refresh"
+                                   OnClick="RefreshResults">
+                            Refresh
+                        </MudButton>
+
+                        <MudButton Variant="Variant.Outlined"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.FileDownload">
+                            Export
+                        </MudButton>
+
+                    </div>
+                </MudCardActions>
+            }
+        </MudCard>
+
+    }
+</MudContainer>
+
+<style>
+    .hover-highlight:hover {
+        background-color: var(--mud-palette-action-hover) !important;
+        cursor: pointer;
+    }
+</style>

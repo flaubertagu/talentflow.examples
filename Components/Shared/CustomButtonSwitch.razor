@@ -1,0 +1,64 @@
+﻿
+<MudToggleGroup T="string" Size="Size.Small" Delimiters="false" ValueChanged="@OnStateValueChanged" FixedContent
+                Value="@SelectionText" Color="@ColorState" SelectionMode="SelectionMode.SingleSelection">
+    <MudToggleItem Value="@ValueYes" Text="@ValueYes" />
+    <MudToggleItem Value="@ValueNo" Text="@ValueNo" />
+</MudToggleGroup>
+
+@code {
+
+    [Parameter]
+    public string ValueYes { get; set; } = "Yes";
+    [Parameter]
+    public string ValueNo { get; set; } = "No";
+    [Parameter]
+    public bool DefaultValue { get; set; } = true;
+    [Parameter]
+    public Color ColorYes { get; set; } = Color.Success;
+    [Parameter]
+    public Color ColorNo { get; set; } = Color.Error;
+    [Parameter]
+    public Size Size { get; set; } = Size.Medium;
+    public string SelectionText { get; set; } = string.Empty;
+    private Color ColorState = Color.Success;
+
+    public bool _defaultValue;
+    protected override async Task OnInitializedAsync()
+    {
+        string newValue = ValueChanged();
+        await OnStateValueChanged(newValue);
+    }
+
+    private string ValueChanged()
+    {
+        string newValue;
+        if (DefaultValue) newValue = ValueYes;
+        else newValue = ValueNo;
+        return newValue;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (_defaultValue != DefaultValue)
+        {
+            _defaultValue = DefaultValue;
+            string newValue = ValueChanged();
+            await OnStateValueChanged(newValue);
+        }
+    }
+
+    private async Task OnStateValueChanged(string newValue)
+    {
+        SelectionText = newValue;
+        await OnValueSelectionChanged(newValue);
+        ColorState = newValue == ValueYes ? ColorYes : ColorNo;
+    }
+
+    [Parameter]
+    public EventCallback<bool> OnSelectionChanged { get; set; }
+    private async Task OnValueSelectionChanged(string newValue)
+    {
+        if (newValue == ValueYes) await OnSelectionChanged.InvokeAsync(true);
+        else await OnSelectionChanged.InvokeAsync(false);
+    }
+}

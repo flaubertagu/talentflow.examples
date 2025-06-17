@@ -1,0 +1,199 @@
+﻿@page "/action-plan"
+
+<PageTitle>Action plan</PageTitle>
+
+<IsBusy @ref="IsBusy" />
+
+<div hidden="@false">
+    <AIConfigCheckerComponent IsConfigured="AiConfigResult" />
+</div>
+
+<MudGrid>
+    @if (GlobalResult == null)
+    {
+        <MudItem xs="12">
+            <MudTable Items="@Strategies" Dense="false" Hover="true" Bordered="false" Striped="false"
+                      @bind-SelectedItem="StrategySelected">
+                <HeaderContent>
+                    <MudTh>
+                        <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<MyStrategy, object>(x => x.Title)">
+                            Title
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<MyStrategy, object>(x => x.Type)">
+                            Type
+                        </MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<MyStrategy, object>(x => x.Strategy)">
+                            Strategy
+                        </MudTableSortLabel>
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Title">@context?.Title</MudTd>
+                    <MudTd DataLabel="Type">@context?.Type</MudTd>
+                    <MudTd DataLabel="Strategy">
+                        @foreach (var line in CustomTextFormatter.ConvertToLines(Statics.ShortText(200, context?.Strategy)))
+                        {
+                            <MudText Typo="Typo.body2">
+                                @((MarkupString)line.Html)
+                            </MudText>
+                        }
+                    </MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[] { 5, 10, 20, 50 }"
+                                   RowsPerPageString="Rows per page:" />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    }
+
+    else
+    {
+        <MudItem xs="12">
+            <MudPaper Class="pa-4">
+                <MudText Typo="Typo.h6" Color="Color.Secondary">
+                    Title -
+                    <MudText Inline Typo="Typo.h6" Color="Color.Primary">@StrategySelected?.Title</MudText>
+                </MudText>
+
+                <MudText Typo="Typo.caption" Color="Color.Info">@StrategySelected?.Type</MudText>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12">
+            <ActionPlanResultVisualizer StrategySelected="StrategySelected"
+                                        GlobalResult="GlobalResult"
+                                        SkillResults="SkillResults"
+                                        ActionPlanSkills="ActionPlanSkills"
+                                        ActionPlanResult="ActionPlanResult"
+                                        Candidates="Candidates"
+                                        OptimalDate="OptimalDate"
+                                        DisplayOptimalDate="DisplayOptimalDate"
+                                        MinimumScore="MinimumScore" />
+        </MudItem>
+    }
+
+    @if (StrategySelected != null)
+    {
+        <MudItem xs="12">
+            <MudPaper Class="pa-4" Elevation="4">
+                <div class="d-flex flex-column flex-wrap gap-2">
+
+                    <MudText Typo="Typo.h6" Color="Color.Secondary">
+                        Selection -
+                        <MudText Inline Typo="Typo.h6" Color="Color.Primary">@StrategySelected.Title</MudText>
+                    </MudText>
+                    <MudDivider />
+
+                    <div class="d-flex flex-row flex-grow-0 flex-wrap gap-4" style="align-items: flex-end;">
+                        <CustomButtonSwitch ValueYes="@("Automation")"
+                                            ValueNo="@("Start Date")"
+                                            DefaultValue="true"
+                                            Size="Size.Small"
+                                            ColorYes="Color.Primary"
+                                            ColorNo="Color.Info"
+                                            OnSelectionChanged="OnAnalysisTypeChange" />
+
+                        @if (AutomateAll)
+                        {
+                            <MudDateRangePicker Class="flex-grow-0" @bind-DateRange="@DatesRange" DateFormat="dddd, dd MMMM, yyyy"
+                                                TitleDateFormat="MMMM dd" Margin="Margin.Dense"
+                                                Variant="Variant.Text" Label="Dates" MinDate="@DateTime.Today" />
+                        }
+                        else
+                        {
+                            <MudDatePicker Class="flex-grow-0" Color="Color.Info" Label="Start date"
+                                           Placeholder="Pick"
+                                           Variant="Variant.Text" Editable="true" @bind-Date="DateChoosed" MinDate="@DateTime.Today" />
+                        }
+                    </div>
+
+                    <div class="d-flex flex-row flex-grow-0 flex-wrap gap-4" style="align-items: center;">
+                        <MudButton Color="Color.Error" Variant="Variant.Outlined" OnClick="ResetSelection" Disabled="@(GlobalResult == null)">
+                            Reset
+                        </MudButton>
+
+                        @if (AutomateAll)
+                        {
+                            @if (GlobalResult != null && ActionPlanResult == null)
+                            {
+                                <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="ResetAnalysis">
+                                    Cancel
+                                </MudButton>
+                            }
+                            else
+                            {
+                                <MudButton Color="Color.Primary" Disabled="@(ActionPlanResult != null)"
+                                           Variant="Variant.Filled" OnClick="AutomateAnalysis">
+                                    Dashboards
+                                </MudButton>
+                            }
+
+                            @if (ActionPlanResult == null)
+                            {
+                                <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="GenerateStrategicActionPlan"
+                                           Disabled="@(GlobalResult != null && ActionPlanResult == null && !SemanticIsConfigured)">
+                                    @if (SemanticIsConfigured)
+                                    {
+                                        @("Action plan")
+                                    }
+                                    else
+                                    {
+                                        @("AI configuration required")
+                                    }
+                                </MudButton>
+                            }
+                            else
+                            {
+                                <MudButton Color="Color.Warning" Variant="Variant.Outlined" OnClick="ResetActionPlanResult">
+                                    Cancel
+                                </MudButton>
+                            }
+                        }
+                        else
+                        {
+                            @if (GlobalResult != null && ActionPlanResult == null)
+                            {
+                                <MudButton Color="Color.Info" Variant="Variant.Outlined" OnClick="ResetAnalysis">
+                                    Cancel
+                                </MudButton>
+                            }
+                            else
+                            {
+                                <MudButton Color="Color.Info" Disabled="@(ActionPlanResult != null)" Variant="Variant.Filled" OnClick="LaunchAnalysis">
+                                    Dashboards
+                                </MudButton>
+                            }
+
+                            @if (ActionPlanResult == null)
+                            {
+                                <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="GenerateStrategicActionPlan"
+                                           Disabled="@(GlobalResult != null && ActionPlanResult == null && !SemanticIsConfigured)">
+                                    @if (SemanticIsConfigured)
+                                    {
+                                        @("Action plan")
+                                    }
+                                    else
+                                    {
+                                        @("AI configuration required")
+                                    }
+                                </MudButton>
+                            }
+                            else
+                            {
+                                <MudButton Color="Color.Warning" Variant="Variant.Outlined" OnClick="ResetActionPlanResult">
+                                    Cancel
+                                </MudButton>
+                            }
+                        }
+                    </div>
+                </div>
+            </MudPaper>
+        </MudItem>
+    }
+
+</MudGrid>

@@ -1,0 +1,51 @@
+﻿
+<div class="d-flex flex-column flex-grow-1 gap-4">
+    <div class="d-flex flex-row flex-grow-1 flex-wrap gap-2">
+        <div class="d-flex flex-column flex-grow-1 gap-2">
+            <MudText Color="Color.Secondary" Typo="Typo.h6">Task</MudText>
+            <MudText Color="Color.Tertiary" Typo="Typo.subtitle1">@Statics.ShortText(50, TaskSelected?.TaskName)</MudText>
+        </div>
+        <div class="d-flex flex-column flex-grow-1 gap-2">
+            <MudText Color="Color.Secondary" Typo="Typo.h6">Assigned to</MudText>
+            <MudText Color="Color.Tertiary" Typo="Typo.subtitle1">@TaskSelected?.AssignedTo</MudText>
+        </div>
+        <div class="d-flex flex-column flex-grow-1 gap-2">
+            <MudText Color="Color.Secondary" Typo="Typo.h6">Selection</MudText>
+            <MudText Color="Color.Primary" Typo="Typo.subtitle1">@MemberSelected?.Name</MudText>
+        </div>
+    </div>
+
+    <MudTable T="TeamMember" Items="@TeamMembers" Dense="false" Hover="true" Bordered="false" Striped="false"
+              OnRowClick="AssigneMemberSelected" Height="400px"
+              AllowUnsorted="true" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<TeamMember, object>(x=>x.Name)">
+                    Title
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortBy="new Func<TeamMember, object>(x=>x.Email)">
+                    Email
+                </MudTableSortLabel>
+            </MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nom">@context.Name</MudTd>
+            <MudTd DataLabel="Email">@context.Email</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[]{10,20,50}"
+                           RowsPerPageString="Rows per page: " />
+        </PagerContent>
+    </MudTable>
+</div>
+
+<div class="d-flex flex-row flex-grow-1 gap-4">
+    <MudButton Color="Color.Warning" OnClick="OnSelectionCanceled">
+        Cancel
+    </MudButton>
+    <MudButton Color="Color.Success" Disabled="@(MemberSelected == null)" OnClick="ValidateMemberSelected">
+        Edit
+    </MudButton>
+</div>

@@ -1,0 +1,118 @@
+﻿<MudPaper Class="pa-4" Elevation="0" Style="width: 100%;">
+    <MudText Typo="Typo.h5" Color="Color.Error">
+        @Title
+    </MudText>
+
+    <!-- Statistiques globales -->
+    <MudGrid Class="mb-4">
+        <MudItem xs="4">
+            <MudCard Class="pa-2 text-center">
+                <MudText Typo="Typo.h6" Color="Color.Primary">@Results.Count</MudText>
+                <MudText Typo="Typo.caption">Candidates</MudText>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4">
+            <MudCard Class="pa-2 text-center">
+                <MudText Typo="Typo.h6" Color="Color.Success">
+                    @Results.Where(r => r.RequirementRatio >= 0.8).Count()
+                </MudText>
+                <MudText Typo="Typo.caption">≥ 80% match</MudText>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="4">
+            <MudCard Variant="Variant.Outlined" Class="pa-2 text-center">
+                <MudText Typo="Typo.h6" Color="Color.Success">
+                    @(Results.Where(r => r.RequirementRatio >= 0.8).Count())
+                </MudText>
+                <MudText Typo="Typo.caption">Average score</MudText>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Tableau des résultats -->
+    <MudDataGrid T="CandidatSkillsMatched"
+                 Items="@Results.OrderByDescending(r => r.Score)"
+                 Dense="true"
+                 Hover="true"
+                 Striped="true"
+                 SortMode="SortMode.Multiple"
+                 RowClick="OnResultSelected">
+        <Columns>
+            <TemplateColumn Title="Candidate" Sortable="true">
+                <CellTemplate>
+                    <div style="display: flex; align-items: center;">
+                        <MudText Typo="Typo.body2">
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Mouse" Class="mr-2" />
+                            @context.Item.EmployeeName
+                        </MudText>
+                    </div>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="Match %" Sortable="true" SortBy="@(x => x.RequirementRatio)">
+                <CellTemplate>
+                    <div style="display: flex; align-items: center;">
+                        <MudProgressLinear Color="@GetMatchColor(context.Item.RequirementRatio)"
+                                           Rounded="true"
+                                           Size="Size.Medium"
+                                           Value="@(context.Item.RequirementRatio * 100)"
+                                           Max="100"
+                                           Class="mr-2"
+                                           Style="width: 60px;" />
+                        <MudText Typo="Typo.body2">@context.Item.RequirementRatio.ToString("P2")</MudText>
+                    </div>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="Mastery score" Sortable="true" SortBy="@(x => x.RetentionScore)">
+                <CellTemplate>
+                    <div style="display: flex; align-items: center;">
+                        <MudProgressLinear Color="@GetScoreColor(context.Item.RetentionScore)"
+                                           Rounded="true"
+                                           Size="Size.Medium"
+                                           Value="@(context.Item.RetentionScore * 100)"
+                                           Class="mr-2"
+                                           Style="width: 60px;" />
+                        <MudText Typo="Typo.body2">@context.Item.RetentionScore.ToString("P1")/100%</MudText>
+                    </div>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="Compatibility" Sortable="true" SortBy="@(x => x.Score)">
+                <CellTemplate>
+                    <div style="display: flex; align-items: center;">
+                        <MudProgressLinear Color="@GetMatchColor(context.Item.Score)"
+                                           Rounded="true"
+                                           Size="Size.Medium"
+                                           Value="@(context.Item.Score * 100)"
+                                           Max="100"
+                                           Class="mr-2"
+                                           Style="width: 60px;" />
+                        <MudText Typo="Typo.body2">@context.Item.Score.ToString("P2")</MudText>
+                    </div>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="Rang" Sortable="true" SortBy="@(x => x.Score)">
+                <CellTemplate>
+                    @{
+                        var rank = Results.OrderByDescending(r => r.Score).ToList().IndexOf(context.Item) + 1;
+                    }
+                    <MudChip Color="@GetRankColor(rank)" Size="Size.Small" Variant="Variant.Filled">
+                        #@rank
+                    </MudChip>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="CandidatSkillsMatched" />
+        </PagerContent>
+    </MudDataGrid>
+
+</MudPaper>
+
+
+<MudDialog @bind-Visible="@_skillsDialogVisible" Options="@_dialogOptions">
+    <DialogContent>
+        <SkillListVisualizer Title="@($"Compétences requises de {SelectedMember?.Name}")"
+                             EmployeeName="@SelectedMember?.Name"
+                             UserSkills="@SelectedMember?.UserSkills"
+                             OnClose="CloseSkillsDialog" />
+    </DialogContent>
+</MudDialog>

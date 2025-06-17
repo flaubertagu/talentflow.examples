@@ -1,0 +1,28 @@
+﻿@using TalentFlow.Csharp.Core.Licensing
+
+<MudStack Class="mt-2 mb-2" Wrap="Wrap.NoWrap" Row="true" Spacing="0">
+    <MudChip T="string" Label="true" Color="Color.Default">TalentFlow License Activation</MudChip>
+    <MudChip T="string" Label="true" Color="ConfigColor(LicenseIsActivated)">@(ConfigurationStatus ?? "Waiting...")</MudChip>
+</MudStack>
+
+@code{
+    [Parameter] public EventCallback<bool> IsActivated { get; set; }
+    private string ConfigurationStatus => LicenseIsActivated ? "Activated" : "Not Activated";
+    public bool LicenseIsActivated { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            LicenseIsActivated = await LibraryConfiguration.ValidateLicenseAsync();
+            await InvokeAsync(StateHasChanged);
+            await IsActivated.InvokeAsync(LicenseIsActivated);
+        }
+    }
+
+    private Color ConfigColor(bool config)
+    {
+        if (config) return Color.Success;
+        return Color.Error;
+    }
+}

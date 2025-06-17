@@ -1,0 +1,18 @@
+﻿<MudGrid hidden="@(IsLoading == false)">
+    <MudItem xs="12">
+        <MudOverlay @bind-Visible="IsLoading" DarkBackground="true" AutoClose="true">
+            <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
+        </MudOverlay>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public bool IsLoading { get; set; } = false;
+
+    public async Task Loading()
+    {
+        IsLoading = !IsLoading;
+        await InvokeAsync(StateHasChanged);
+    }
+}
