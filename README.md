@@ -1,4 +1,4 @@
-﻿# TalentPro.Demo - Strategic Talent Management Platform
+# TalentPro.Demo - Strategic Talent Management Platform
 
 ## 🚀 Overview
 
@@ -81,39 +81,39 @@ After 'var app = builder.Build();' enable services for proper functioning of:
 - **Competency Assessment**: Analyze technical skill mastery levels and identify training opportunities
 - **Productivity Metrics**: Track deadline compliance, task recurrence patterns, and overall productivity indicators
 - **Targeted Training**: Generate personalized training recommendations based on skill gaps and business needs
-![](https://github.com/flaubertagu/talentflow.examples/tree/master/wwwroot/images/1-Employee-metrics.gif)
+![1-Employee-metrics](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/1-Employee-metrics.gif)
 
 ### 🎯 Smart Candidate Selection
 - **Strategic Skill Prioritization**: Define and prioritize critical technical competencies aligned with business strategy
 - **Top Performer Identification**: Automatically identify top X candidates based on specific skill requirements
 - **Project-Specific Matching**: Match talent to projects beyond general scoring, focusing on specialized competencies
-![](https://github.com/flaubertagu/talentflow.examples/tree/master/wwwroot/images/2-Perfect-candidate.gif)
+![2-Perfect-candidate](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/2-Perfect-candidate.gif)
 
 ### 🤖 Intelligent Task Attribution
 - **Automated Distribution**: Smart task allocation based on availability, competencies, and workload balance
 - **Burnout Prevention**: Intelligent workload management to prevent employee overload
 - **Manual Override**: Flexible manual task reassignment capabilities when needed
 - **Manager Efficiency**: Reduce management overhead by up to 40% through automation
-![](https://github.com/flaubertagu/talentflow.examples/tree/master/wwwroot/images/3-Automatic-tsk-attribution.gif)
+![3-Automatic-tsk-attribution](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/3-Automatic-tsk-attribution.gif)
 
 ### 🎯 Strategic Planning & Analysis
 - **Competency Gap Analysis**: Identify required technical skills for strategic initiatives and detect workforce gaps
 - **Vision Alignment**: Analyze strategic projects against current team capabilities
 - **Rapid Assessment**: Quickly evaluate skill requirements for new business domains and projects
-![](https://github.com/flaubertagu/talentflow.examples/tree/master/wwwroot/images/4-Strategic-vision.gif)
+![4-Strategic-vision](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/4-Strategic-vision.gif)
 
 ### 📈 AI-Powered Action Planning
 - **Success Probability Dashboard**: Real-time analysis of strategic initiative success likelihood
 - **OpenAI Integration**: Generate comprehensive action plans and recommendations
 - **Internal vs External Hiring**: Intelligent insights on whether to recruit externally or develop internal talent
 - **Decision Optimization**: Reduce strategic meeting time and accelerate decision-making processes
-![](https://github.com/flaubertagu/talentflow.examples/tree/master/wwwroot/images/5-Action-plan.gif)
+![5-Action-plan](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/5-Action-plan.gif)
 
 ### 📄 CV Analysis & Integration
 - **Automated Skill Extraction**: Parse candidate resumes to identify technical competencies
 - **Profile Generation**: Create comprehensive candidate profiles for comparison
 - **Seamless Integration**: Connect external candidate analysis with internal workforce planning
-![](https://github.com/flaubertagu/talentflow.examples/tree/master/wwwroot/images/6-CV-Skill-analytics.gif)
+![6-CV-Skill-analytics](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/6-CV-Skill-analytics.gif)
 
 ## 🛠️ Technology Stack
 
@@ -166,7 +166,7 @@ After 'var app = builder.Build();' enable services for proper functioning of:
 ## 🏆 Why Choose TalentPro?
 
 TalentPro transforms traditional HR processes into intelligent, data-driven operations. By combining advanced analytics with practical automation, organizations can optimize their most valuable asset—their people—while reducing administrative burden and improving strategic outcomes.
-![](https://github.com/flaubertagu/talentflow.examples/tree/master/wwwroot/images/homepage-screenshot.jpeg)
+![homepage-screenshot](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/homepage-screenshot.jpeg)
 
 ---
 
