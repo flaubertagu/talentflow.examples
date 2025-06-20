@@ -5,6 +5,11 @@
 TalentPro is a comprehensive AI-powered talent management platform built with .NET 9 and MudBlazor, designed to optimize workforce performance through intelligent analytics, automated task allocation, and strategic planning tools. The platform empowers organizations to make data-driven decisions about their human resources while reducing administrative overhead and improving team productivity.
 
 
+## 📺 Live Demo
+
+Experience the demo [website](https://tiedapp.com) to understand your solution here
+
+
 ## ⚙️ Setup prerequisites
 
 ### 📜 appsettings.json
@@ -81,12 +86,14 @@ After 'var app = builder.Build();' enable services for proper functioning of:
 - **Competency Assessment**: Analyze technical skill mastery levels and identify training opportunities
 - **Productivity Metrics**: Track deadline compliance, task recurrence patterns, and overall productivity indicators
 - **Targeted Training**: Generate personalized training recommendations based on skill gaps and business needs
+
 ![1-Employee-metrics](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/1-Employee-metrics.gif)
 
 ### 🎯 Smart Candidate Selection
 - **Strategic Skill Prioritization**: Define and prioritize critical technical competencies aligned with business strategy
 - **Top Performer Identification**: Automatically identify top X candidates based on specific skill requirements
 - **Project-Specific Matching**: Match talent to projects beyond general scoring, focusing on specialized competencies
+
 ![2-Perfect-candidate](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/2-Perfect-candidate.gif)
 
 ### 🤖 Intelligent Task Attribution
@@ -94,12 +101,14 @@ After 'var app = builder.Build();' enable services for proper functioning of:
 - **Burnout Prevention**: Intelligent workload management to prevent employee overload
 - **Manual Override**: Flexible manual task reassignment capabilities when needed
 - **Manager Efficiency**: Reduce management overhead by up to 40% through automation
-![3-Automatic-tsk-attribution](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/3-Automatic-tsk-attribution.gif)
+
+![3-Automatic-task-attribution](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/3-Automatic-tsk-attribution.gif)
 
 ### 🎯 Strategic Planning & Analysis
 - **Competency Gap Analysis**: Identify required technical skills for strategic initiatives and detect workforce gaps
 - **Vision Alignment**: Analyze strategic projects against current team capabilities
 - **Rapid Assessment**: Quickly evaluate skill requirements for new business domains and projects
+
 ![4-Strategic-vision](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/4-Strategic-vision.gif)
 
 ### 📈 AI-Powered Action Planning
@@ -107,12 +116,14 @@ After 'var app = builder.Build();' enable services for proper functioning of:
 - **OpenAI Integration**: Generate comprehensive action plans and recommendations
 - **Internal vs External Hiring**: Intelligent insights on whether to recruit externally or develop internal talent
 - **Decision Optimization**: Reduce strategic meeting time and accelerate decision-making processes
+
 ![5-Action-plan](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/5-Action-plan.gif)
 
 ### 📄 CV Analysis & Integration
 - **Automated Skill Extraction**: Parse candidate resumes to identify technical competencies
 - **Profile Generation**: Create comprehensive candidate profiles for comparison
 - **Seamless Integration**: Connect external candidate analysis with internal workforce planning
+
 ![6-CV-Skill-analytics](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/6-CV-Skill-analytics.gif)
 
 ## 🛠️ Technology Stack
@@ -166,6 +177,7 @@ After 'var app = builder.Build();' enable services for proper functioning of:
 ## 🏆 Why Choose TalentPro?
 
 TalentPro transforms traditional HR processes into intelligent, data-driven operations. By combining advanced analytics with practical automation, organizations can optimize their most valuable asset—their people—while reducing administrative burden and improving strategic outcomes.
+
 ![homepage-screenshot](https://raw.githubusercontent.com/flaubertagu/talentflow.examples/master/wwwroot/images/homepage-screenshot.jpeg)
 
 ---
