@@ -239,15 +239,16 @@ namespace TalentFlow.Demo.Components.Pages
             _selectedMember = null;
             StateHasChanged();
         }
+
         // Utility methods for metrics
         private Color GetDelayRatioColor(double ratio)
         {
             return ratio switch
             {
-                >= 0.8 => Color.Success,
+                >= 0.8 => Color.Error,
                 >= 0.6 => Color.Warning,
                 >= 0.4 => Color.Info,
-                _ => Color.Error
+                _ => Color.Success
             };
         }
 
@@ -293,8 +294,8 @@ namespace TalentFlow.Demo.Components.Pages
             return score switch
             {
                 >= 0.85 => Color.Success,
-                >= 0.70 => Color.Warning,
-                >= 0.55 => Color.Info,
+                >= 0.70 => Color.Info,
+                >= 0.55 => Color.Warning,
                 _ => Color.Error
             };
         }
@@ -318,7 +319,7 @@ namespace TalentFlow.Demo.Components.Pages
                 >= 0.75 => Color.Error,
                 >= 0.40 => Color.Warning,
                 >= 0.25 => Color.Info,
-                _ => Color.Info
+                _ => Color.Success
             };
         }
 
@@ -337,6 +338,7 @@ namespace TalentFlow.Demo.Components.Pages
 
         private Color GetPerformanceColor(double? score)
         {
+            if (score == null) return Color.Default;
             return score switch
             {
                 >= 0.85 => Color.Success,
@@ -376,9 +378,9 @@ namespace TalentFlow.Demo.Components.Pages
         {
             return metrics.PerformanceScore switch
             {
-                >= 0.8 => Severity.Success,
-                >= 0.6 => Severity.Warning,
-                >= 0.4 => Severity.Info,
+                >= 0.85 => Severity.Success,
+                >= 0.60 => Severity.Info,
+                >= 0.50 => Severity.Warning,
                 _ => Severity.Error
             };
         }

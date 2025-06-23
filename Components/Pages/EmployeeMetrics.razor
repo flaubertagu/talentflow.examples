@@ -83,7 +83,7 @@
                 <MudCard Class="mud-height-full">
                     <MudCardHeader>
                         <CardHeaderAvatar>
-                            <MudAvatar Color="Color.Primary">
+                            <MudAvatar Color="@GetPerformanceColor(metrics?.PerformanceScore)">
                                 @member.Name.Substring(0, 1).ToUpper()
                             </MudAvatar>
                         </CardHeaderAvatar>
@@ -107,7 +107,7 @@
 
                     <MudCardActions>
                         <MudButton Variant="Variant.Text"
-                                   Color="Color.Primary"
+                                   Color="Color.Default"
                                    FullWidth
                                    Disabled="@_popupVisible"
                                    StartIcon="@Icons.Material.Filled.Psychology"
@@ -115,7 +115,7 @@
                             Skills
                         </MudButton>
                         <MudButton Variant="Variant.Text"
-                                   Color="Color.Info"
+                                   Color="Color.Default"
                                    FullWidth
                                    Disabled="@_popupVisible"
                                    StartIcon="@Icons.Material.Filled.Analytics"
