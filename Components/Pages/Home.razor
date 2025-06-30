@@ -21,210 +21,309 @@
     </MudPaper>
 
     <!-- Key Features Overview -->
-    <MudText Typo="Typo.h3" Class="text-center mb-8 font-weight-bold" Color="Color.Primary">
-        Comprehensive Talent Management Solutions
-    </MudText>
 
     <!-- Feature Cards Grid -->
-    <MudGrid Spacing="4" Class="mb-8">
-        <!-- Employee Metrics Card -->
-        <MudItem xs="12" md="6" lg="4">
-            <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px; transition: transform 0.3s ease;">
-                <MudCardContent Class="pa-6">
-                    <div Class="d-flex align-center mb-4">
-                        <MudAvatar Color="Color.Primary" Size="Size.Large" Class="mr-4">
-                            <MudIcon Icon="@Icons.Material.Filled.Analytics" />
-                        </MudAvatar>
-                        <MudText Typo="Typo.h5" Class="font-weight-bold">Explore Metrics</MudText>
-                    </div>
-                    <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
-                        Comprehensive performance analytics including deadline compliance, task recurrence patterns, productivity metrics, and technical skill mastery levels.
-                    </MudText>
-                    <MudDivider Class="mb-4" />
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Performance scoring with custom parameters
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Technical competency assessment
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-4">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Targeted training recommendations
-                    </MudText>
-                    <MudButton Href="/employee-metrics" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">
-                        Employee metrics
-                    </MudButton>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
+    <!-- Feature Cards Grid -->
+    <MudCard Class="mb-8" Elevation="4" Style="border-radius: 12px; border: 1px solid var(--mud-palette-primary); background-color: var(--mud-palette-background-grey) ">
+        <MudCardHeader Style="background-color: var(--mud-palette-appbar-background) ">
+            <CardHeaderContent>
+                <MudText Typo="Typo.h3" Class="text-center mb-8 font-weight-bold" Align="Align.Center" Color="Color.Primary">
+                    Built your own project
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid Spacing="4">
+                <!-- Employee Metrics Card -->
+                <MudItem xs="12" md="6" lg="3">
+                    <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px; transition: transform 0.3s ease;">
+                        <MudCardContent Class="pa-6">
+                            <div Class="d-flex align-center mb-4">
+                                <MudAvatar Color="Color.Primary" Size="Size.Large" Class="mr-4">
+                                    <MudIcon Icon="@Icons.Material.Filled.Analytics" />
+                                </MudAvatar>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">Explore Metrics</MudText>
+                            </div>
+                            <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
+                                Comprehensive performance analytics including deadline compliance, task recurrence patterns,
+                                productivity metrics, and technical skill mastery levels.
+                            </MudText>
+                            <MudDivider Class="mb-4" />
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Performance scoring with custom parameters
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Technical competency assessment
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-4">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Targeted training recommendations
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="/employee-metrics" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">
+                                Employee Metrics
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
 
-        <!-- Candidate Selection Card -->
-        <MudItem xs="12" md="6" lg="4">
-            <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
-                <MudCardContent Class="pa-6">
-                    <div Class="d-flex align-center mb-4">
-                        <MudAvatar Color="Color.Secondary" Size="Size.Large" Class="mr-4">
-                            <MudIcon Icon="@Icons.Material.Filled.PersonSearch" />
-                        </MudAvatar>
-                        <MudText Typo="Typo.h5" Class="font-weight-bold">Candidate Selection</MudText>
-                    </div>
-                    <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
-                        Strategic talent identification based on critical technical competencies and project-specific requirements beyond general scoring metrics.
-                    </MudText>
-                    <MudDivider Class="mb-4" />
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Strategic skill prioritization
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Top performer identification
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-4">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Project-specific talent matching
-                    </MudText>
-                    <MudButton Href="/candidat-selection" Variant="Variant.Filled" Color="Color.Secondary" FullWidth="true">
-                        Perfect candidates
-                    </MudButton>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
+                <!-- Candidate Selection Card -->
+                <MudItem xs="12" md="6" lg="3">
+                    <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
+                        <MudCardContent Class="pa-6">
+                            <div Class="d-flex align-center mb-4">
+                                <MudAvatar Color="Color.Secondary" Size="Size.Large" Class="mr-4">
+                                    <MudIcon Icon="@Icons.Material.Filled.PersonSearch" />
+                                </MudAvatar>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">Candidate Selection</MudText>
+                            </div>
+                            <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
+                                Strategic talent identification based on critical technical competencies and
+                                project-specific requirements beyond general scoring metrics.
+                            </MudText>
+                            <MudDivider Class="mb-4" />
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Strategic skill prioritization
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Top performer identification
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-4">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Project-specific talent matching
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="/candidat-selection" Variant="Variant.Filled" Color="Color.Secondary" FullWidth="true">
+                                Perfect candidates
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
 
-        <!-- Task Attribution Card -->
-        <MudItem xs="12" md="6" lg="4">
-            <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
-                <MudCardContent Class="pa-6">
-                    <div Class="d-flex align-center mb-4">
-                        <MudAvatar Color="Color.Tertiary" Size="Size.Large" Class="mr-4">
-                            <MudIcon Icon="@Icons.Material.Filled.Assignment" />
-                        </MudAvatar>
-                        <MudText Typo="Typo.h5" Class="font-weight-bold">Smart Task Attribution</MudText>
-                    </div>
-                    <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
-                        Intelligent task allocation system that prevents burnout, reduces assignment errors, and optimizes team manager workload through automation.
-                    </MudText>
-                    <MudDivider Class="mb-4" />
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Automated task distribution
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Workload balancing
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-4">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Manual override capabilities
-                    </MudText>
-                    <MudButton Href="/task-attribution" Variant="Variant.Filled" Color="Color.Tertiary" FullWidth="true">
-                        Automatic task attribution
-                    </MudButton>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
+                <!-- Task Attribution Card -->
+                <MudItem xs="12" md="6" lg="3">
+                    <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
+                        <MudCardContent Class="pa-6">
+                            <div Class="d-flex align-center mb-4">
+                                <MudAvatar Color="Color.Tertiary" Size="Size.Large" Class="mr-4">
+                                    <MudIcon Icon="@Icons.Material.Filled.Assignment" />
+                                </MudAvatar>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">Smart Task Attribution</MudText>
+                            </div>
+                            <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
+                                Intelligent task allocation system that prevents burnout, reduces assignment errors,
+                                and optimizes team manager workload through automation.
+                            </MudText>
+                            <MudDivider Class="mb-4" />
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Automated task distribution
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Workload balancing
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-4">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Manual override capabilities
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="/task-attribution" Variant="Variant.Filled" Color="Color.Tertiary" FullWidth="true">
+                                Automatic task attribution
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
 
-        <!-- Strategy Card -->
-        <MudItem xs="12" md="6" lg="4">
-            <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
-                <MudCardContent Class="pa-6">
-                    <div Class="d-flex align-center mb-4">
-                        <MudAvatar Color="Color.Info" Size="Size.Large" Class="mr-4">
-                            <MudIcon Icon="@Icons.Material.Filled.Directions" />
-                        </MudAvatar>
-                        <MudText Typo="Typo.h5" Class="font-weight-bold">Strategic Planning</MudText>
-                    </div>
-                    <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
-                        Rapid identification of required technical competencies for strategic initiatives and detection of skill gaps within your workforce.
-                    </MudText>
-                    <MudDivider Class="mb-4" />
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Competency requirement analysis
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Skills gap identification
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-4">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Strategic vision alignment
-                    </MudText>
-                    <MudButton Href="/strategy" Variant="Variant.Filled" Color="Color.Info" FullWidth="true">
-                        Plan Strategy
-                    </MudButton>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
+                <!-- Strategy Card -->
+                <MudItem xs="12" md="6" lg="3">
+                    <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
+                        <MudCardContent Class="pa-6">
+                            <div Class="d-flex align-center mb-4">
+                                <MudAvatar Color="Color.Info" Size="Size.Large" Class="mr-4">
+                                    <MudIcon Icon="@Icons.Material.Filled.Directions" />
+                                </MudAvatar>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">Strategic Planning</MudText>
+                            </div>
+                            <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
+                                Rapid identification of required technical competencies for strategic
+                                initiatives and detection of skill gaps within your workforce.
+                            </MudText>
+                            <MudDivider Class="mb-4" />
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Competency requirement analysis
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Skills gap identification
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-4">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Strategic vision alignment
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="/strategy" Variant="Variant.Filled" Color="Color.Info" FullWidth="true">
+                                Strategic vision
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
 
-        <!-- Action Plan Card -->
-        <MudItem xs="12" md="6" lg="4">
-            <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
-                <MudCardContent Class="pa-6">
-                    <div Class="d-flex align-center mb-4">
-                        <MudAvatar Color="Color.Success" Size="Size.Large" Class="mr-4">
-                            <MudIcon Icon="@Icons.Material.Filled.Dashboard" />
-                        </MudAvatar>
-                        <MudText Typo="Typo.h5" Class="font-weight-bold">Action Planning</MudText>
-                    </div>
-                    <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
-                        AI-powered success probability analysis and comprehensive action plans to optimize strategic decision-making and reduce meeting overhead.
-                    </MudText>
-                    <MudDivider Class="mb-4" />
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Success probability dashboard
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        OpenAI-powered recommendations
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-4">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Internal vs external hiring insights
-                    </MudText>
-                    <MudButton Href="/action-plan" Variant="Variant.Filled" Color="Color.Success" FullWidth="true">
-                        Create Action Plan
-                    </MudButton>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
+                <!-- Action Plan Card -->
+                <MudItem xs="12" md="6" lg="3">
+                    <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
+                        <MudCardContent Class="pa-6">
+                            <div Class="d-flex align-center mb-4">
+                                <MudAvatar Color="Color.Success" Size="Size.Large" Class="mr-4">
+                                    <MudIcon Icon="@Icons.Material.Filled.Dashboard" />
+                                </MudAvatar>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">Action Planning</MudText>
+                            </div>
+                            <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
+                                AI-powered success probability analysis and comprehensive action plans
+                                to optimize strategic decision-making and reduce meeting overhead.
+                            </MudText>
+                            <MudDivider Class="mb-4" />
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Success probability dashboard
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                OpenAI-powered recommendations
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-4">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Internal vs external hiring insights
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="/action-plan" Variant="Variant.Filled" Color="Color.Success" FullWidth="true">
+                                Create Action Plan
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
 
-        <!-- CV Import Card -->
-        <MudItem xs="12" md="6" lg="4">
-            <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
-                <MudCardContent Class="pa-6">
-                    <div Class="d-flex align-center mb-4">
-                        <MudAvatar Color="Color.Warning" Size="Size.Large" Class="mr-4">
-                            <MudIcon Icon="@Icons.Material.Filled.AccountBox" />
-                        </MudAvatar>
-                        <MudText Typo="Typo.h5" Class="font-weight-bold">CV Analysis</MudText>
-                    </div>
-                    <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
-                        Automated technical competency extraction from candidate resumes for seamless integration with action planning and candidate comparison workflows.
-                    </MudText>
-                    <MudDivider Class="mb-4" />
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Automated skill extraction
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-2">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Candidate profile generation
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="mb-4">
-                        <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
-                        Integrated comparison tools
-                    </MudText>
-                    <MudButton Href="/cv-import" Variant="Variant.Filled" Color="Color.Warning" FullWidth="true">
-                        CV Skills analytics
-                    </MudButton>
-                </MudCardContent>
-            </MudCard>
-        </MudItem>
-    </MudGrid>
+                <!-- CV Import Card -->
+                <MudItem xs="12" md="6" lg="3">
+                    <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
+                        <MudCardContent Class="pa-6">
+                            <div Class="d-flex align-center mb-4">
+                                <MudAvatar Color="Color.Warning" Size="Size.Large" Class="mr-4">
+                                    <MudIcon Icon="@Icons.Material.Filled.AccountBox" />
+                                </MudAvatar>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">CV Analysis</MudText>
+                            </div>
+                            <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
+                                Automated extraction of technical skills from candidate CVs for integration into
+                                action planning and candidate comparison operations.
+                            </MudText>
+                            <MudDivider Class="mb-4" />
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Automated skill extraction
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Candidate profile generation
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-4">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Integrated comparison tools
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="/cv-import" Variant="Variant.Filled" Color="Color.Warning" FullWidth="true">
+                                CV Skills analytics
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+
+                <!-- Skills saver -->
+                <MudItem xs="12" md="6" lg="3">
+                    <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
+                        <MudCardContent Class="pa-6">
+                            <div Class="d-flex align-center mb-4">
+                                <MudAvatar Color="Color.Error" Size="Size.Large" Class="mr-4">
+                                    <MudIcon Icon="@Icons.Material.Filled.DataSaverOn" />
+                                </MudAvatar>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">Skills saver</MudText>
+                            </div>
+                            <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
+                                Calculate the retention rate of employees' technical skills mastery and allows you to save them in
+                                your system by returning the result.
+                            </MudText>
+                            <MudDivider Class="mb-4" />
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Calculation of employee skill mastery
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Saving skill mastery data in your system
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-4">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Create your own dashboards
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="/skills-saver" Variant="Variant.Filled" Color="Color.Error" FullWidth="true">
+                                Employee skills saver
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+
+                <!-- Skills finder -->
+                <MudItem xs="12" md="6" lg="3">
+                    <MudCard Elevation="3" Class="h-100" Style="border-radius: 12px;">
+                        <MudCardContent Class="pa-6">
+                            <div Class="d-flex align-center mb-4">
+                                <MudAvatar Color="Color.Primary" Size="Size.Large" Class="mr-4">
+                                    <MudIcon Icon="@Icons.Material.Filled.DataSaverOn" />
+                                </MudAvatar>
+                                <MudText Typo="Typo.h5" Class="font-weight-bold">Skills finder</MudText>
+                            </div>
+                            <MudText Typo="Typo.body1" Class="mb-4" Color="Color.Secondary">
+                                From a list of tasks for a project, a mission, retrieve the list of technical skills required for
+                                the successful execution of the tasks.
+                            </MudText>
+                            <MudDivider Class="mb-4" />
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Find technical skills
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-2">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Normalize the skills found with yours
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="mb-4">
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Class="mr-2" Color="Color.Success" />
+                                Save skills found in your system
+                            </MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="/skills-finder" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">
+                                Task skills finder
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+    </MudCard>
 
     <!-- Statistics Section -->
     <MudPaper Elevation="2" Class="pa-6 mb-8" Style="border-radius: 12px; background: linear-gradient(45deg, #f8f9fa 0%, #e9ecef 100%);">

@@ -1,10 +1,11 @@
 ﻿
 <MudStack Class="mt-2 mb-2" Wrap="Wrap.NoWrap" Row="true" Spacing="0">
-    <MudChip T="string" Label="true" Color="Color.Default">TalentFlow AI status</MudChip>
+    <MudChip T="string" Label="true" Color="Color.Default" hidden="@TitleIsHidden">TalentFlow AI status</MudChip>
     <MudChip T="string" Label="true" Color="ConfigColor(SemanticIsConfigured)">@(ConfigurationStatus ?? "Waiting...")</MudChip>
 </MudStack>
 
 @code{
+    [Parameter] public bool TitleIsHidden { get; set; } = false;
     [Parameter] public EventCallback<bool> IsConfigured { get; set; }
     private string ConfigurationStatus => SemanticIsConfigured ? "Configured" : "Not Configured";
     public bool SemanticIsConfigured { get; set; }

@@ -1,0 +1,287 @@
+﻿@page "/skills-saver"
+@using System.ComponentModel.DataAnnotations
+
+
+<PageTitle>Employee Skills Saver</PageTitle>
+
+<IsBusy @ref="IsBusy" />
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="pa-6">
+    <MudPaper Class="pa-6 mb-4" Elevation="2">
+        <MudText Typo="Typo.h4" Class="mb-2" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.CompareArrows" Class="mr-3" />
+            Employee Skills Saver
+        </MudText>
+        <MudText Typo="Typo.body1" Color="Color.Secondary">
+            Calculate and save employee skills by analysing their task activities
+        </MudText>
+    </MudPaper>
+
+    <!-- License Checker -->
+    <div hidden="@false">
+        <CoreConfigChecker IsActivated="LicenseActivationStatus" />
+    </div>
+
+    <!-- Generate Button Section -->
+    <div class="d-flex flex-grow-1 flex-wrap gap-4 mb-4">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@(EmployeesAfterData.Any() ? Icons.Material.Filled.Refresh : Icons.Material.Filled.AutoFixHigh)"
+                   OnClick="RegenerateData">
+            @(EmployeesAfterData.Any() ? "Regenerate" : "Generate")
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Secondary"
+                   StartIcon="@(TasksExpanded ? Icons.Material.Filled.HideImage : Icons.Material.Filled.Dashboard)"
+                   Disabled="@(!TasksFinished.Any())"
+                   OnClick="OnTaskExpandedClick">
+            @(TasksExpanded ? "Hide metrics" : "Tasks metrics")
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Warning"
+                   StartIcon="@Icons.Material.Filled.Calculate"
+                   Disabled="@(!EmployeesBeforeData.Any() || !IsActivated)"
+                   OnClick="CalculateMetrics">
+            Calculate
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Success"
+                   Size="Size.Large"
+                   StartIcon="@Icons.Material.Filled.Save"
+                   Disabled="@(!EmployeesAfterData.Any())">
+            Save Changes
+        </MudButton>
+    </div>
+
+    <MudGrid>
+
+        <!-- Metrics tasks -->
+        @if (TasksExpanded)
+        {
+            <MudItem xs="12">
+                <MudCollapse Expanded="TasksExpanded">
+                    <TaskFinishedMetricViewer Tasks="TasksFinished" />
+                </MudCollapse>
+            </MudItem>
+        }
+
+        <!-- Search filter -->
+        <MudItem xs="12">
+            <MudTextField @bind-Value="searchText"
+                          Label="Search employee"
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          Class="mb-4"
+                          Clearable="true"
+                          OnClearButtonClick="SetFilterLists"
+                          Immediate="true"
+                          OnKeyUp="FilterSkills" />
+        </MudItem>
+
+        <!-- Before Data Section -->
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4" Elevation="3" Style="height: 100%; border-left: 4px solid var(--mud-palette-warning);">
+                <MudText Typo="Typo.h5" Class="mb-4" Color="Color.Warning">
+                    <MudIcon Icon="@Icons.Material.Filled.HistoryEdu" Class="mr-2" />
+                    Before Modification
+                </MudText>
+
+                @*@if (EmployeesBeforeData?.Any() == true)*@
+                @if (FilteredEmployeesBeforeData?.Any() == true)
+                {
+                    @*@foreach (var employee in EmployeesBeforeData)*@
+                    @foreach (var employee in FilteredEmployeesBeforeData)
+                    {
+                        <MudCard Class="mb-4" Elevation="2">
+                            <MudCardContent>
+                                <MudText Typo="Typo.h6" Class="mb-3" Color="Color.Info">
+                                    <MudIcon Icon="@Icons.Material.Filled.Person" Class="mr-2" />
+                                    @employee.EmployeeName
+                                </MudText>
+
+                                @if (employee.EmployeSkills?.Any() == true)
+                                {
+                                    <MudSimpleTable Style="overflow-x: auto; height: 300px " Dense="true">
+                                        <thead>
+                                            <tr>
+                                                <th>Skill Name</th>
+                                                <th>Complexity</th>
+                                                <th>Retention Rate</th>
+                                                <th>Last Use</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var skill in employee.EmployeSkills)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <MudChip T="string" Color="Color.Default" Size="Size.Small">
+                                                            @skill.SkillName
+                                                        </MudChip>
+                                                    </td>
+                                                    <td>
+                                                        <MudChip T="Complexity" Color="GetComplexityColor(skill.SkillComplexity)" Size="Size.Small">
+                                                            @skill.SkillComplexity
+                                                        </MudChip>
+                                                    </td>
+                                                    <td>
+                                                        <MudProgressLinear Color="Color.Info"
+                                                                           Value="@(skill.RetentionRate * 100)"
+                                                                           Min="0"
+                                                                           Max="100"
+                                                                           Class="my-2" />
+                                                        <MudText Typo="Typo.caption">@skill.RetentionRate.ToString("P2")"</MudText>
+                                                    </td>
+                                                    <td>
+                                                        <MudText Typo="Typo.body2">
+                                                            @(skill.LastUse == DateTime.MinValue ? "N/S" : @skill.LastUse.ToString("MMM dd, yyyy"))
+                                                        </MudText>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </MudSimpleTable>
+                                }
+                                else
+                                {
+                                    <MudAlert Severity="Severity.Info" Dense="true">
+                                        No skills recorded for this employee
+                                    </MudAlert>
+                                }
+                            </MudCardContent>
+                        </MudCard>
+                    }
+                }
+                else
+                {
+                    <MudPaper Class="pa-8 text-center" Style="background-color: var(--mud-palette-surface-variant);">
+                        <MudIcon Icon="@Icons.Material.Filled.HourglassEmpty" Size="Size.Large" Color="Color.Secondary" />
+                        <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mt-2">
+                            No data available
+                        </MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                            Original employee data will appear here
+                        </MudText>
+                    </MudPaper>
+                }
+            </MudPaper>
+        </MudItem>
+
+        <!-- After Data Section -->
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4" Elevation="3" Style="height: 100%; border-left: 4px solid var(--mud-palette-success);">
+                <MudText Typo="Typo.h5" Class="mb-4" Color="Color.Success">
+                    <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Class="mr-2" />
+                    After Modification
+                </MudText>
+
+                @*@if (EmployeesAfterData?.Any() == true)*@
+                @if (FilteredEmployeesAfterData?.Any() == true)
+                {
+                    @*@foreach (var employee in EmployeesAfterData)*@
+                    @foreach (var employee in FilteredEmployeesAfterData)
+                    {
+                        <MudCard Class="mb-4" Elevation="2">
+                            <MudCardContent>
+                                <MudText Typo="Typo.h6" Class="mb-3" Color="Color.Info">
+                                    <MudIcon Icon="@Icons.Material.Filled.Person" Class="mr-2" />
+                                    @employee.EmployeeName
+                                </MudText>
+
+                                @if (employee.EmployeSkills?.Any() == true)
+                                {
+                                    <MudSimpleTable Style="overflow-x: auto; height:300px" Dense="true">
+                                        <thead>
+                                            <tr>
+                                                <th>Skill Name</th>
+                                                <th>Complexity</th>
+                                                <th>Retention Rate</th>
+                                                <th>Last Use</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var skill in employee.EmployeSkills)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <MudChip T="string" Color="Color.Default" Size="Size.Small">
+                                                            @skill.SkillName
+                                                        </MudChip>
+                                                    </td>
+                                                    <td>
+                                                        <MudChip T="Complexity" Color="GetComplexityColor(skill.SkillComplexity)" Size="Size.Small">
+                                                            @skill.SkillComplexity
+                                                        </MudChip>
+                                                    </td>
+                                                    <td>
+                                                        <MudProgressLinear Color="Color.Success"
+                                                                           Value="@(skill.RetentionRate * 100)"
+                                                                           Min="0"
+                                                                           Max="100"
+                                                                           Class="my-2" />
+                                                        <MudText Typo="Typo.caption">@skill.RetentionRate.ToString("P2")"</MudText>
+                                                    </td>
+                                                    <td>
+                                                        <MudText Typo="Typo.body2">
+                                                            @(skill.LastUse == DateTime.MinValue ? "N/S" : @skill.LastUse.ToString("MMM dd, yyyy"))
+                                                        </MudText>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </MudSimpleTable>
+                                }
+                                else
+                                {
+                                    <MudAlert Severity="Severity.Info" Dense="true">
+                                        No skills recorded for this employee
+                                    </MudAlert>
+                                }
+                            </MudCardContent>
+                        </MudCard>
+                    }
+                }
+                else
+                {
+                    <MudPaper Class="pa-8 text-center" Style="background-color: var(--mud-palette-surface-variant);">
+                        <MudIcon Icon="@Icons.Material.Filled.HourglassEmpty" Size="Size.Large" Color="Color.Secondary" />
+                        <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mt-2">
+                            No data available
+                        </MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                            Modified employee data will appear here
+                        </MudText>
+                    </MudPaper>
+                }
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Action Buttons Section -->
+    <MudPaper Class="pa-4 mt-4" Elevation="1">
+        <MudStack Row="true" Justify="Justify.Center" Spacing="3">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="Icons.Material.Filled.Refresh"
+                       Size="Size.Large">
+                Load Data
+            </MudButton>
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Secondary"
+                       StartIcon="Icons.Material.Filled.Edit"
+                       Size="Size.Large">
+                Modify Data
+            </MudButton>
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Info"
+                       StartIcon="Icons.Material.Filled.Compare"
+                       Size="Size.Large">
+                Compare Changes
+            </MudButton>
+        </MudStack>
+    </MudPaper>
+</MudContainer>

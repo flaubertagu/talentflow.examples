@@ -1,6 +1,6 @@
 ﻿<MudGrid hidden="@(IsLoading == false)">
     <MudItem xs="12">
-        <MudOverlay @bind-Visible="IsLoading" DarkBackground="true" AutoClose="true">
+        <MudOverlay @bind-Visible="IsLoading" DarkBackground="true" AutoClose="false">
             <MudProgressCircular Color="Color.Primary" Size="Size.Medium" Indeterminate="true" />
         </MudOverlay>
     </MudItem>

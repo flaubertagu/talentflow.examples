@@ -14,7 +14,7 @@ Experience the demo [website](https://tiedapp.com) to understand your solution h
 
 ### 📜 appsettings.json
 To obtain a developer key to configure the TalentFlow.Csharp.Core nuget, create an account at https://license.tiedapp.com/ and generate a 'Test' key
-```bash
+```csharp
   "TalentFlowLicense": {
     "LicenseKey": "YOUR-LICENSE-KEY-HERE"
   },
@@ -30,7 +30,7 @@ To obtain a developer key to configure the TalentFlow.Csharp.Core nuget, create 
 #### ⚙️ Converters
 Declare the converters you will use in your application to convert your classes into the format accepted by the TalentFlow.Csharp nuget suite
 
-```bash
+```csharp
   services.AddScoped<IConverter<TaskCompleted, TaskFinished>, ConvertToTaskFinished>();
   services.AddScoped<IConverter<TaskDoTo, TaskAttribution>, ConvertToTaskAttribution>();
   ...
@@ -40,14 +40,14 @@ Declare the converters you will use in your application to convert your classes 
 Declare all services required for the proper functioning of:
 
 ##### 💻 TalentFlow.Csharp.Core
-```bash
+```csharp
   services.AddSingleton<TaskAttributionManager>();
   services.AddSingleton<EmployeeManager>();
   services.AddSingleton<StrategyVisionManager>();
 ```
 
 ##### 💻 TalentFlow.Csharp.AI
-```bash
+```csharp
   services.AddSingleton<AIManager>();
 ```
 
@@ -55,7 +55,7 @@ Declare all services required for the proper functioning of:
 After 'var app = builder.Build();' enable services for proper functioning of:
 
 ##### 💻 TalentFlow.Csharp.Core
-```bash
+```csharp
   // Retrieve the configuration
   string? licenseKey = config["TalentFlowLicense:LicenseKey"];
   
@@ -64,7 +64,7 @@ After 'var app = builder.Build();' enable services for proper functioning of:
 ```
 
 ##### 💻 TalentFlow.Csharp.AI
-```bash
+```csharp
   using (var scope = app.Services.CreateScope())
   {
       var aiManager = scope.ServiceProvider.GetRequiredService<AIManager>();

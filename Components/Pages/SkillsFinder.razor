@@ -1,0 +1,206 @@
+﻿@page "/skills-finder"
+
+<PageTitle>Skills finder</PageTitle>
+
+<IsBusy @ref="IsBusy" />
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="pa-6">
+    <MudPaper Class="pa-6 mb-4" Elevation="2">
+        <MudText Typo="Typo.h4" Class="mb-2" Color="Color.Primary">
+            <MudIcon Icon="@Icons.Material.Filled.CompareArrows" Class="mr-3" />
+            Tasks Skills Finder
+        </MudText>
+        <MudText Typo="Typo.body1" Color="Color.Secondary">
+            Use OpenAI to find required technical skills for your task, and normalized them with the one in your system
+        </MudText>
+    </MudPaper>
+
+    <!-- License Checker -->
+    <div hidden="@false">
+        <AIConfigCheckerComponent TitleIsHidden="true" IsConfigured="AiConfigResult" />
+    </div>
+
+    <!-- Generate Button Section -->
+    <div class="d-flex flex-grow-1 flex-wrap gap-4 mb-4">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@(SkillsFound.Any() ? Icons.Material.Filled.Refresh : Icons.Material.Filled.AutoFixHigh)"
+                   OnClick="RegenerateData">
+            @(SkillsFound.Any() ? "Regenerate" : "Generate")
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Warning"
+                   StartIcon="@Icons.Material.Filled.Calculate"
+                   Disabled="@(!SkillsToFind.Any() || !SemanticIsConfigured)"
+                   OnClick="SearchSkills">
+            Search skills
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Success"
+                   Size="Size.Large"
+                   StartIcon="@Icons.Material.Filled.Save"
+                   Disabled="@(!SkillsFound.Any())">
+            Save Changes
+        </MudButton>
+    </div>
+
+    <MudGrid>
+
+        <!-- Before Data Section -->
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4" Elevation="3" Style="height: 100%; border-left: 4px solid var(--mud-palette-warning);">
+                <MudText Typo="Typo.h5" Class="mb-4" Color="Color.Warning">
+                    <MudIcon Icon="@Icons.Material.Filled.HistoryEdu" Class="mr-2" />
+                    Before Modification
+                </MudText>
+
+                @if (SkillsToFind?.Any() == true)
+                {
+                    @foreach (var task in SkillsToFind)
+                    {
+                        <MudCard Class="mb-4" Elevation="2">
+                            <MudCardContent>
+                                <MudText Typo="Typo.h6" Class="mb-3" Color="Color.Info">
+                                    <MudIcon Icon="@Icons.Material.Filled.Title" Class="mr-2" />
+                                    @task.Title
+                                </MudText>
+
+                                <MudText Typo="Typo.body1" Class="mb-3">
+                                    <MudIcon Icon="@Icons.Material.Filled.Description" Class="mr-2" />
+                                    @task.Description
+                                </MudText>
+
+                                @if (task.Skills?.Any() == true)
+                                {
+                                    <MudSimpleTable Style="overflow-x: auto; height: 300px " Dense="true">
+                                        <thead>
+                                            <tr>
+                                                <th>Skill Name</th>
+                                                <th>Complexity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var skill in task.Skills)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <MudChip T="string" Color="Color.Default" Size="Size.Small">
+                                                            @skill.Name
+                                                        </MudChip>
+                                                    </td>
+                                                    <td>
+                                                        <MudChip T="Complexity" Color="GetComplexityColor(skill.Complexity)" Size="Size.Small">
+                                                            @skill.Complexity
+                                                        </MudChip>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </MudSimpleTable>
+                                }
+                                else
+                                {
+                                    <MudAlert Severity="Severity.Info" Dense="true" Style=" height: 300px ">
+                                        No skills recorded for this task
+                                    </MudAlert>
+                                }
+                            </MudCardContent>
+                        </MudCard>
+                    }
+                }
+                else
+                {
+                    <MudPaper Class="pa-8 text-center" Style="background-color: var(--mud-palette-surface-variant);">
+                        <MudIcon Icon="@Icons.Material.Filled.HourglassEmpty" Size="Size.Large" Color="Color.Secondary" />
+                        <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mt-2">
+                            No data available
+                        </MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                            Original task data will appear here
+                        </MudText>
+                    </MudPaper>
+                }
+            </MudPaper>
+        </MudItem>
+
+        <!-- After Data Section -->
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4" Elevation="3" Style="height: 100%; border-left: 4px solid var(--mud-palette-success);">
+                <MudText Typo="Typo.h5" Class="mb-4" Color="Color.Success">
+                    <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Class="mr-2" />
+                    After Modification
+                </MudText>
+
+                @if (SkillsFound?.Any() == true)
+                {
+                    @foreach (var task in SkillsFound)
+                    {
+                        <MudCard Class="mb-4" Elevation="2">
+                            <MudCardContent>
+                                <MudText Typo="Typo.h6" Class="mb-3" Color="Color.Info">
+                                    <MudIcon Icon="@Icons.Material.Filled.Title" Class="mr-2" />
+                                    @task.Title
+                                </MudText>
+
+                                <MudText Typo="Typo.body1" Class="mb-3">
+                                    <MudIcon Icon="@Icons.Material.Filled.Description" Class="mr-2" />
+                                    @task.Description
+                                </MudText>
+
+                                @if (task.Skills?.Any() == true)
+                                {
+                                    <MudSimpleTable Style="overflow-x: auto; height:300px" Dense="true">
+                                        <thead>
+                                            <tr>
+                                                <th>Skill Name</th>
+                                                <th>Complexity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var skill in task.Skills)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <MudChip T="string" Color="Color.Default" Size="Size.Small">
+                                                            @skill.Name
+                                                        </MudChip>
+                                                    </td>
+                                                    <td>
+                                                        <MudChip T="Complexity" Color="GetComplexityColor(skill.Complexity)" Size="Size.Small">
+                                                            @skill.Complexity
+                                                        </MudChip>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </MudSimpleTable>
+                                }
+                                else
+                                {
+                                    <MudAlert Severity="Severity.Info" Dense="true" Style=" height: 300px ">
+                                        No skills recorded for this task
+                                    </MudAlert>
+                                }
+                            </MudCardContent>
+                        </MudCard>
+                    }
+                }
+                else
+                {
+                    <MudPaper Class="pa-8 text-center" Style="background-color: var(--mud-palette-surface-variant);">
+                        <MudIcon Icon="@Icons.Material.Filled.HourglassEmpty" Size="Size.Large" Color="Color.Secondary" />
+                        <MudText Typo="Typo.h6" Color="Color.Secondary" Class="mt-2">
+                            No data available
+                        </MudText>
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                            Modified task data will appear here
+                        </MudText>
+                    </MudPaper>
+                }
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+</MudContainer>
